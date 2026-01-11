@@ -130,118 +130,6 @@ function getRoleText(role) {
     };
     return roles[role] || role;
 }
-/*
-// فتح نافذة إضافة مستخدم
-function openAddUserModal() {
-    document.getElementById('userModalTitle').textContent = 'إضافة مستخدم جديد';
-    document.getElementById('userForm').reset();
-    document.getElementById('userId').value = '';
-    document.getElementById('passwordFields').style.display = 'block';
-    document.getElementById('userPassword').required = true;
-    document.getElementById('userPasswordConfirm').required = true;
-    document.getElementById('userUsername').disabled = false; // تفعيل حقل اسم المستخدم
-    document.getElementById('userModal').classList.add('show');
-}
-
-// تعديل مستخدم
-function editUser(id) {
-    const user = users.find(u => u.id === id);
-    if (!user) return;
-
-    document.getElementById('userModalTitle').textContent = 'تعديل المستخدم';
-    document.getElementById('userId').value = user.id;
-    document.getElementById('userUsername').value = user.username;
-    document.getElementById('userUsername').disabled = true; // تعطيل تعديل اسم المستخدم
-    document.getElementById('userName').value = user.name || '';
-    document.getElementById('userRole').value = user.role;
-    document.getElementById('userStatus').value = user.status || 'active';
-    
-    // إخفاء حقول كلمة المرور عند التعديل
-    document.getElementById('passwordFields').style.display = 'none';
-    document.getElementById('userPassword').required = false;
-    document.getElementById('userPasswordConfirm').required = false;
-    
-    document.getElementById('userModal').classList.add('show');
-}
-
-// إغلاق النافذة المنبثقة
-function closeUserModal() {
-    document.getElementById('userModal').classList.remove('show');
-}
-
-// حفظ المستخدم
-async function saveUser() {
-    const userId = document.getElementById('userId').value;
-    const username = document.getElementById('userUsername').value.trim();
-    const name = document.getElementById('userName').value.trim();
-    const role = document.getElementById('userRole').value;
-    const status = document.getElementById('userStatus').value;
-
-    if (!username || !role) {
-        alert('يرجى ملء الحقول المطلوبة (اسم المستخدم والصلاحية)');
-        return;
-    }
-
-    // التحقق من صحة اسم المستخدم (بدون مسافات)
-    if (username.includes(' ')) {
-        alert('اسم المستخدم لا يجب أن يحتوي على مسافات');
-        return;
-    }
-
-    try {
-        if (!userId) {
-            // إضافة مستخدم جديد
-            const password = document.getElementById('userPassword').value;
-            const passwordConfirm = document.getElementById('userPasswordConfirm').value;
-
-            if (!password || password.length < 6) {
-                alert('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
-                return;
-            }
-
-            if (password !== passwordConfirm) {
-                alert('كلمة المرور غير متطابقة');
-                return;
-            }
-
-            const response = await adminAPI.createUser(username, password, role);
-
-            if (response.success) {
-                // تحديث الاسم الكامل إذا تم إدخاله
-                if (name) {
-                    await adminAPI.updateUserName(response.userId, name);
-                }
-                
-                alert('تم إضافة المستخدم بنجاح!');
-                await loadUsers();
-                closeUserModal();
-            }
-        } else {
-            // تحديث مستخدم موجود
-            let updateSuccess = true;
-
-            // تحديث الاسم الكامل
-            if (name !== '') {
-                const nameResponse = await adminAPI.updateUserName(userId, name);
-                if (!nameResponse.success) updateSuccess = false;
-            }
-            
-            // تحديث الدور
-            const roleResponse = await adminAPI.updateUserRole(userId, role);
-            if (!roleResponse.success) updateSuccess = false;
-
-            if (updateSuccess) {
-                alert('تم تحديث المستخدم بنجاح!');
-                await loadUsers();
-                closeUserModal();
-            }
-        }
-    } catch (error) {
-        console.error('خطأ في حفظ المستخدم:', error);
-        alert(error.message || 'حدث خطأ في حفظ البيانات');
-    }
-}*/
-
 // فتح نافذة إضافة مستخدم
 function openAddUserModal() {
     document.getElementById('userModalTitle').textContent = 'إضافة مستخدم جديد';
@@ -411,7 +299,7 @@ async function deleteUser(id) {
     }
 }
 
-// دالة تبديل القائمة الجانبية (إذا كانت موجودة)
+// دالة تبديل القائمة الجانبية
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     if (sidebar) {

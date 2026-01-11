@@ -77,9 +77,6 @@ function getUserNameById(userId) {
 
 // رسم المهام التي تنتهي اليوم
 function renderTodayTasks() {
-  
-  //const today = new Date().toISOString().split('T')[0];
-  //const todayTasks = allTasks.filter(task => task.due_date?.split('T')[0] === today);
   const today = moment().format('YYYY-MM-DD');
   const todayTasks = allTasks.filter(task =>
     task.due_date &&
@@ -186,16 +183,8 @@ async function loadUsersTable() {
 function renderTasks() {
   const tbody = document.getElementById('tasksTableBody');
   const selectedUser = document.getElementById('userFilter')?.value;
-  /*
-    let filteredTasks = allTasks;
-    if (selectedUser) {
-      filteredTasks = allTasks.filter(t => t.user_id == selectedUser);
-    }*/
-
-
   filteredTasks = [...allTasks];
   renderTasksTable();
-
 
   tbody.innerHTML = '';
 
