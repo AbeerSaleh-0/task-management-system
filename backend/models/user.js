@@ -1,6 +1,6 @@
 const db = require('../config/db');
 
-// إنشاء جدول Users (يتنفذ مرة وحدة عند أول تشغيل)
+// إنشاء جدول Users 
 const createUsersTable = async () => {
   const query = `
     CREATE TABLE IF NOT EXISTS users (
@@ -67,7 +67,7 @@ const User = {
     const [result] = await db.execute(query, [role, id]);
     return result;
   },
-
+  // تحديث كلمة المرور الخاصة بالمستخدم
   updatePassword: async (id, hashedPassword) => {
     const query = 'UPDATE users SET password = ? WHERE id = ?';
     const [result] = await db.execute(query, [hashedPassword, id]);

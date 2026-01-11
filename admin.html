@@ -105,13 +105,6 @@
                             <div class="overview-info">
                                 <h3>إجمالي المهام</h3>
                                 <p id="totalTasks">0</p>
-                                <!--<div class="overview-trend trend-up">
-                                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-                                    </svg>
-                                    <span>+12% عن الشهر الماضي</span>
-                                </div>-->
                             </div>
                             <div class="overview-icon icon-purple">
                                 <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -128,13 +121,6 @@
                             <div class="overview-info">
                                 <h3>المهام المكتملة</h3>
                                 <p id="completedTasks">0</p>
-                                <!--<div class="overview-trend trend-up">
-                                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-                                    </svg>
-                                    <span>+8% عن الشهر الماضي</span>
-                                </div>-->
                             </div>
                             <div class="overview-icon icon-green">
                                 <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,13 +136,6 @@
                             <div class="overview-info">
                                 <h3>المهام قيد التنفيذ</h3>
                                 <p id="inProgressTasks">0</p>
-                              <!--  <div class="overview-trend trend-up">
-                                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-                                    </svg>
-                                    <span>+5% عن الشهر الماضي</span>
-                                </div>-->
                             </div>
                             <div class="overview-icon icon-yellow">
                                 <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,11 +152,6 @@
                                 <h3>المستخدمين النشطين</h3>
                                 <p id="activeUsers">0</p>
                                 <div class="overview-trend trend-up">
-                                   <!-- <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-                                    </svg>
-                                   <span>+3 مستخدمين جدد</span>--> 
                                 </div>
                             </div>
                             <div class="overview-icon icon-blue">
@@ -225,8 +199,6 @@
 
             </div>
 
-            <!---------------------------------------------يحتاج للتعديل--------------------------------------------->
-            <!-- Users Section 
             <div id="usersSection" style="display: none;">
                 <div class="table-container">
                     <div class="table-header">
@@ -240,121 +212,11 @@
                             </tr>
                         </thead>
                         <tbody id="usersTableBody">
-                            <tr onclick="openUserDetailsModal('أحمد محمد')" style="cursor: pointer;">
-                                <td>
-                                    <div class="user-info">
-                                        <div class="user-avatar">أ</div>
-                                        <div class="user-details">
-                                            <h4>أحمد محمد</h4>
-                                            <p>مطور</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>2 مهام</td>
-                            </tr>
-                            <tr onclick="openUserDetailsModal('سارة علي')" style="cursor: pointer;">
-                                <td>
-                                    <div class="user-info">
-                                        <div class="user-avatar">س</div>
-                                        <div class="user-details">
-                                            <h4>سارة علي</h4>
-                                            <p>مصممة</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>2 مهام</td>
-                            </tr>
-                            <tr onclick="openUserDetailsModal('محمد خالد')" style="cursor: pointer;">
-                                <td>
-                                    <div class="user-info">
-                                        <div class="user-avatar">م</div>
-                                        <div class="user-details">
-                                            <h4>محمد خالد</h4>
-                                            <p>محلل بيانات</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>2 مهام</td>
-                            </tr>
-                            <tr onclick="openUserDetailsModal('فاطمة أحمد')" style="cursor: pointer;">
-                                <td>
-                                    <div class="user-info">
-                                        <div class="user-avatar">ف</div>
-                                        <div class="user-details">
-                                            <h4>فاطمة أحمد</h4>
-                                            <p>مديرة مشروع</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>2 مهام</td>
-
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>-->
-
-            <div id="usersSection" style="display: none;">
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2 class="section-title">المستخدمين</h2>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>المستخدم</th>
-                                <th>المهام</th>
-                            </tr>
-                        </thead>
-                        <tbody id="usersTableBody">
-                            <!-- سيتم ملؤها ديناميكياً من JavaScript -->
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- Tasks Section -->
-            <!-- 
-            <div id="tasksSection" style="display: none;">
-                <div class="section-header">
-                    <h2 class="section-title">إدارة المهام</h2>
-                    <div style="display: flex; gap: 1rem; align-items: center;">
-                         
-                        <select class="form-select" id="userFilter" onchange="filterTasksByUser()"
-                            style="width: 200px;">
-                            <option value="">جميع المستخدمين</option>
-                            
-                        </select>
-                        <button class="btn btn-primary" onclick="openAddTaskModal()">
-                            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 4v16m8-8H4"></path>
-                            </svg>
-                            إضافة مهمة جديدة
-                        </button>
-                    </div>
-                </div>
-
-                <div class="table-container">
-                    <div class="table-header">
-                        <h3 style="font-size: 1rem; color: #6b7280;">
-                            <span id="filteredTasksCount">عرض جميع المهام (4)</span>
-                        </h3>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>اسم المهمة</th>
-                                <th>المستخدم</th>
-                                <th>الحالة</th>
-                                <th>الموعد النهائي</th>
-                                <th>الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tasksTableBody"></tbody>
-                    </table>
-                </div>
-            </div>-->
             <!-- Tasks Section -->
             <div id="tasksSection" style="display: none;">
                 <div class="section-header">
@@ -450,61 +312,6 @@
         </div>
     </div>
 
-    <!-- Add/Edit Task Modal -->
-    <!--
-    <div class="modal" id="taskModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="modalTitle">إضافة مهمة جديدة</h3>
-                <button class="close-btn" onclick="closeTaskModal()">
-                    <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="taskForm">
-                    <input type="hidden" id="taskId">
-                    <div class="form-group">
-                        <label class="form-label">اسم المهمة</label>
-                        <input type="text" class="form-input" id="taskName" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">تعيين المستخدم</label>
-                        <select class="form-select" id="taskUser" required>
-                            <option value="">اختر المستخدم</option>
-                            <option value="أحمد محمد">أحمد محمد</option>
-                            <option value="سارة علي">سارة علي</option>
-                            <option value="محمد خالد">محمد خالد</option>
-                            <option value="فاطمة أحمد">فاطمة أحمد</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">الحالة</label>
-                        <select class="form-select" id="taskStatus" required>
-                            <option value="not-started">لم تبدأ</option>
-                            <option value="in-progress">قيد التنفيذ</option>
-                            <option value="done">منجزة</option>
-                            <option value="overdue">متأخرة</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">الموعد النهائي</label>
-                        <input type="date" class="form-input" id="taskDeadline" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">الملاحظات</label>
-                        <textarea class="form-textarea" id="taskNotes"></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeTaskModal()">إلغاء</button>
-                <button class="btn btn-primary" onclick="saveTask()">حفظ المهمة</button>
-            </div>
-        </div>
-    </div>
--->
     <!-- Task Details Modal -->
     <div class="modal" id="taskDetailsModal" style="display: none;">
         <div class="modal-content" style="max-width: 600px;">
@@ -518,10 +325,10 @@
                 </button>
             </div>
             <div class="modal-body" id="taskDetailsContent">
-                <!-- سيتم ملؤه ديناميكياً -->
             </div>
         </div>
     </div>
+    
     <!-- Edit Task Modal -->
     <div class="modal" id="editTaskModal" style="display: none;">
         <div class="modal-content" style="max-width: 700px;">

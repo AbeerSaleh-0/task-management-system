@@ -35,34 +35,6 @@ const Task = {
   const [result] = await db.execute(query, [title, description, status, priority, user_id, due_date, manager_notes]);
   return result;
 },
-/*
-  // جلب مهمة بالـ id
-  findById: async (id) => {
-    const query = 'SELECT * FROM tasks WHERE id = ?';
-    const [rows] = await db.execute(query, [id]);
-    return rows[0];
-  },
-
-  // جلب جميع المهام
-  findAll: async () => {
-    const query = `
-      SELECT tasks.*, users.username 
-      FROM tasks 
-      JOIN users ON tasks.user_id = users.id
-      ORDER BY tasks.created_at DESC
-    `;
-    const [rows] = await db.execute(query);
-    return rows;
-  },
-  */
-/*
-  // جلب مهام مستخدم معين
-  findByUserId: async (user_id) => {
-    const query = 'SELECT * FROM tasks WHERE user_id = ? ORDER BY created_at DESC';
-    const [rows] = await db.execute(query, [user_id]);
-    return rows;
-  },
-  */
  // جلب مهمة بالـ id
 findById: async (id) => {
   const query = 'SELECT * FROM tasks WHERE id = ?';
@@ -155,7 +127,5 @@ findByUserId: async (user_id) => {
     return result;
   },
 };
-
-
 
 module.exports = Task;

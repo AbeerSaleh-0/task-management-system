@@ -24,19 +24,19 @@ router.use(authenticateToken);
 
 // === مسارات المهام الأساسية ===
 
-// POST /api/tasks - إنشاء مهمة جديدة (Admin/Manager فقط)
+// POST /api/tasks - إنشاء مهمة جديدة (Admin فقط)
 router.post('/', adminOrManager, validateTask, createTask);
 
-// GET /api/tasks - جلب جميع المهام (Admin/Manager فقط)
+// GET /api/tasks - جلب جميع المهام (Admin فقط)
 router.get('/', adminOrManager, getAllTasks);
 
 // GET /api/tasks/my - جلب مهام المستخدم الحالي
 router.get('/my', getMyTasks);
 
-// GET /api/tasks/status/:status - جلب المهام حسب الحالة (Admin/Manager فقط)
+// GET /api/tasks/status/:status - جلب المهام حسب الحالة (Admin فقط)
 router.get('/status/:status', adminOrManager, getTasksByStatus);
 
-// GET /api/tasks/user/:userId - جلب مهام مستخدم معين (Admin/Manager فقط)
+// GET /api/tasks/user/:userId - جلب مهام مستخدم معين (Admin فقط)
 router.get('/user/:userId', adminOrManager, getTasksByUserId);
 
 // GET /api/tasks/:id - جلب مهمة معينة مع المهام الفرعية

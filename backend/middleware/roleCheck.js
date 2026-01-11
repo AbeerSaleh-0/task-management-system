@@ -1,7 +1,7 @@
 // Middleware للتحقق من صلاحيات الدور
 const checkRole = (...allowedRoles) => {
   return (req, res, next) => {
-    // التأكد من وجود بيانات المستخدم (يجي من auth middleware)
+    // التأكد من وجود بيانات المستخدم 
     if (!req.user) {
       return res.status(401).json({
         success: false,
