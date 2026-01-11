@@ -85,21 +85,6 @@ function renderTodayTasks() {
     task.due_date &&
     moment(task.due_date).format('YYYY-MM-DD') === today
   );
-  //console.log('TODAY:', today);
-  //const username = task.username;
-  
-/*const name = todayTasks.forEach(task => {
-  const name = getUserNameById(task.user_id);
-  console.log(name);
-});*/
-
-
-  //const user = getUser(todayTasks.task.userId);
-  //const name = user.name;
-  //const name = user.name;
-  //console.log(name);
-  //if()
- 
 
   const countElement = document.getElementById('todayTasksCount');
   const container = document.getElementById('todayTasksContainer');
