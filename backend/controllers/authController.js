@@ -47,19 +47,16 @@ const login = async (req, res, next) => {
   }
 };
 
-// تسجيل الخروج (optional - بس للتوضيح)
+// تسجيل الخروج 
 const logout = (req, res) => {
-  // في JWT ما نحتاج نسوي شي في الباك-إند
-  // الفرونت-إند يحذف الـ token من localStorage
   res.status(200).json({
     success: true,
     message: 'Logout successful'
   });
 };
 
-// التحقق من الـ token (للتأكد إن المستخدم مسجل دخول)
+// التحقق من الـ token 
 const verifyToken = (req, res) => {
-  // إذا وصلنا هنا يعني الـ token صحيح (عبر auth middleware)
   res.status(200).json({
     success: true,
     message: 'Token is valid',

@@ -1,10 +1,9 @@
 const mysql = require('mysql2/promise');
 
-// إنشاء connection pool للاتصال بقاعدة البيانات
 const pool = mysql.createPool({
   host: 'localhost',        // عنوان السيرفر
-  user: 'root',              // اسم المستخدم (default في XAMPP)
-  password: '',              // كلمة المرور (فاضية في XAMPP)
+  user: 'root',              // اسم المستخدم 
+  password: '',              // كلمة المرور 
   database: 'task_management', // اسم قاعدة البيانات
   waitForConnections: true,
   connectionLimit: 10,       // عدد الاتصالات المتزامنة

@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
-// إنشاء مستخدم جديد (Admin فقط)
+// إنشاء مستخدم جديد 
 const createUser = async (req, res, next) => {
   try {
     const { username, name, password, role} = req.body; 
@@ -32,7 +32,7 @@ const createUser = async (req, res, next) => {
   }
 };
 
-// جلب جميع المستخدمين (Admin فقط)
+// جلب جميع المستخدمين 
 const getAllUsers = async (req, res, next) => {
   try {
     const users = await User.findAll();
@@ -48,7 +48,7 @@ const getAllUsers = async (req, res, next) => {
   }
 };
 
-// جلب مستخدم معين (Admin فقط)
+// جلب مستخدم معين 
 const getUserById = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -75,7 +75,7 @@ const getUserById = async (req, res, next) => {
   }
 };
 
-// تحديث دور المستخدم (Admin فقط)
+// تحديث دور المستخدم 
 const updateUserRole = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -112,7 +112,7 @@ const updateUserRole = async (req, res, next) => {
   }
 };
 
-// حذف مستخدم (Admin فقط)
+// حذف مستخدم 
 const deleteUser = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -147,7 +147,7 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-// تحديث اسم المستخدم (Admin فقط)
+// تحديث اسم المستخدم 
 const updateUserName = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -182,7 +182,7 @@ const updateUserName = async (req, res, next) => {
   }
 };
 
-// تحديث كلمة مرور مستخدم (Admin فقط)
+// تحديث كلمة مرور مستخدم 
 const updateUserPassword = async (req, res, next) => {
   try {
     const { id } = req.params;

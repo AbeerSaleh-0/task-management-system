@@ -204,7 +204,7 @@ const deleteTask = async (req, res, next) => {
       });
     }
 
-    // حذف المهمة (المهام الفرعية تنحذف تلقائياً بسبب CASCADE)
+    // حذف المهمة 
     await Task.delete(id);
 
     res.status(200).json({
