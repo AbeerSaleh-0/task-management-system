@@ -12,6 +12,8 @@ backend/node_modules/
 logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # OS files
 .DS_Store
@@ -21,7 +23,14 @@ desktop.ini
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # Build files
 dist/
 build/
+
+# Database
+*.sql
+*.db
+*.sqlite
