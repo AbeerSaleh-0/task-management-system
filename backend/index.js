@@ -2,7 +2,14 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://tasks-s.netlify.app/', // حطي الـ URL من Netlify
+    'http://localhost:3000', // للتطوير المحلي
+    'http://127.0.0.1:5500'  // إذا تستخدمين Live Server
+  ],
+  credentials: true
+}));
 
 // استيراد قاعدة البيانات والـ Models (لإنشاء الجداول)
 require('./config/db');
