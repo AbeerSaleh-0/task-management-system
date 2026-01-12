@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('./config/db');
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -12,7 +13,7 @@ app.use(cors({
 }));
 
 // استيراد قاعدة البيانات والـ Models (لإنشاء الجداول)
-require('./config/db');
+
 require('./models/user');
 require('./models/task');
 require('./models/subtask');
