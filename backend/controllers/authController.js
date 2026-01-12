@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const { generateToken } = require('../middleware/auth');
+const jwt = require('jsonwebtoken');
 
 // تسجيل الدخول
 const login = async (req, res, next) => {
