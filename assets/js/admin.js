@@ -71,6 +71,7 @@ function updateOverview() {
     console.log(today);
     return dueDate < today; 
   }).length;
+  console.log(overdueTasks.length);
  // const activeUsers = allUsers.length;
 
   document.getElementById('totalTasks').textContent = total;
