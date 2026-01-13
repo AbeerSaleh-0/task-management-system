@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 // تسجيل الدخول
 const login = async (req, res, next) => {
-  
+
   console.log('HEADERS:', req.headers); 
   console.log('BODY:', req.body);
   try {
@@ -42,6 +42,7 @@ const login = async (req, res, next) => {
       user: {
         id: user.id,
         username: user.username,
+        name: user.name,
         role: user.role
       }
     });
