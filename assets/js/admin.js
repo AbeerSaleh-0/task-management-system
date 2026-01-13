@@ -76,7 +76,7 @@ function updateOverview() {
   document.getElementById('totalTasks').textContent = total;
   document.getElementById('completedTasks').textContent = completed;
   document.getElementById('inProgressTasks').textContent = inProgress;
-  document.getElementById('activeUsers').textContent = overdueTasks;
+  document.getElementById('overdueTasks').textContent = overdueTasks;
 }
 
 function getUserNameById(userId) {
