@@ -784,7 +784,7 @@ function populateUserFilter() {
   allUsers.forEach(user => {
     const option = document.createElement('option');
     option.value = user.id;
-    option.textContent = user.username;
+    option.textContent = user.name;
     select.appendChild(option);
   });
 }

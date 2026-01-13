@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   const user = authAPI.getCurrentUser();
-  console.log(user);
+  //console.log(user);
   // عرض اسم المستخدم
   document.querySelector('.top-bar-left h1').textContent = `مرحباً، ${authAPI.getUserName()}`;
   //document.querySelector('.top-bar-left h1').textContent = `مرحباً، ${user.name || user.username}`;
