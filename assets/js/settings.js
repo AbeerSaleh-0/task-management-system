@@ -56,12 +56,12 @@ function updateStats() {
 // فلترة المستخدمين
 function filterUsers() {
     const roleFilter = document.getElementById('roleFilter').value;
-    const statusFilter = document.getElementById('statusFilter').value;
+    //const statusFilter = document.getElementById('statusFilter').value;
 
     filteredUsers = users.filter(user => {
         const matchRole = !roleFilter || user.role === roleFilter;
-        const matchStatus = !statusFilter || user.status === statusFilter;
-        return matchRole && matchStatus;
+       // const matchStatus = !statusFilter || user.status === statusFilter;
+        return matchRole;
     });
 
     renderUsers();
@@ -100,7 +100,6 @@ function renderUsers() {
                     </div>
                 </td>
                 <td><span class="role-badge role-${user.role}">${getRoleText(user.role)}</span></td>
-                <td><span class="status-badge status-${user.status || 'active'}">${user.status === 'active' ? 'نشط' : 'غير نشط'}</span></td>
                 <td>${joinDate}</td>
                 <td>
                     <div class="action-buttons">
@@ -161,7 +160,7 @@ function editUser(id) {
     document.getElementById('userUsername').disabled = true; // تعطيل تعديل اسم المستخدم
     document.getElementById('userName').value = user.name || '';
     document.getElementById('userRole').value = user.role;
-    document.getElementById('userStatus').value = user.status || 'active';
+    //document.getElementById('userStatus').value = user.status || 'active';
     
     // إخفاء حقول الإضافة وعرض حقول التعديل
     document.getElementById('passwordFields').style.display = 'none';
@@ -180,7 +179,7 @@ async function saveUser() {
     const username = document.getElementById('userUsername').value.trim();
     const name = document.getElementById('userName').value.trim();
     const role = document.getElementById('userRole').value;
-    const status = document.getElementById('userStatus').value;
+    //const status = document.getElementById('userStatus').value;
 
     if (!username || !role) {
         alert('يرجى ملء الحقول المطلوبة (اسم المستخدم والصلاحية)');
