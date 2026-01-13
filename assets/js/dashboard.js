@@ -39,7 +39,7 @@ function updateOverview() {
   const today = new Date().toISOString().split('T')[0];
 
   // المهام اليوم
-  const todayTasks = myTasks.filter(t => t.due_date === today).length;
+  const todayTasks = myTasks.filter(t => moment(t.due_date) === moment(today)).length;
 
   // المهام المتأخرة (الموعد النهائي قبل اليوم وليست مكتملة)
   const overdueTasks = myTasks.filter(t => {
