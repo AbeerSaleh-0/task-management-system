@@ -65,7 +65,7 @@ function updateOverview() {
    // حساب المهام المتأخرة
   const overdueTasks = allTasks.filter(t => {
     if (t.status === 'completed') return false;
-    const dueDate = new Date(t.due_Date);
+    const dueDate = t.due_Date;
     console.log(dueDate);
     const today = new Date();
     console.log(today);
