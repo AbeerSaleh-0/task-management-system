@@ -103,32 +103,9 @@ const getTasksByUserId = async (req, res, next) => {
 };
 
 // جلب مهام المستخدم الحالي
-/*
 const getMyTasks = async (req, res, next) => {
   try {
     const tasks = await Task.findByUserId(req.user.id);
-
-    res.status(200).json({
-      success: true,
-      count: tasks.length,
-      tasks
-    });
-
-  } catch (error) {
-    next(error);
-  }
-};
-*/
-const getMyTasks = async (req, res, next) => {
-  try {
-    const since = req.query.since ? new Date(req.query.since) : null;
-
-    let tasks;
-    if (since) {
-      tasks = await Task.findByUserIdSince(req.user.id, since); // تحتاج تضيف هذه الدالة في الموديل
-    } else {
-      tasks = await Task.findByUserId(req.user.id);
-    }
 
     res.status(200).json({
       success: true,
