@@ -193,6 +193,12 @@ const taskAPI = {
     return await apiCall('/tasks/my', 'GET');
   },
 
+  getMyTasksSince = async (since) => {
+  return await fetch(`/api/tasks/my?since=${since}`, {
+    headers: { 'Authorization': `Bearer ${authAPI.getToken()}` }
+  }).then(res => res.json());
+  },
+
   // جلب مهام حسب الحالة
   getByStatus: async (status) => {
     return await apiCall(`/tasks/status/${status}`, 'GET');

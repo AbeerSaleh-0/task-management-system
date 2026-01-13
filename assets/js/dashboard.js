@@ -12,7 +12,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   //document.querySelector('.top-bar-left h1').textContent = `مرحباً، ${user.name || user.username}`;
   // تحميل المهام
   await loadMyTasks();
+
+  
+  // === بدء polling لتحديث المهام تلقائيًا كل 10 ثواني ===
+  let lastPollTime = new Date().toISOString();
+  setInterval(async () => {
+    try {
+      const response = await taskAPI.getMyTasksSince(lastPollTime); // تحتاج تضيف هذه الدالة في taskAPI
+      const newTasks = response.tasks || [];
+      if (newTasks.length > 0) {
+        // إضافة المهام الجديدة في الأعلى
+        myTasks = [...newTasks, ...myTasks];
+        updateOverview();
+        renderTasks();
+      }
+      lastPollTime = new Date().toISOString();
+    } catch (error) {
+      console.error('خطأ في تحديث المهام تلقائيًا:', error);
+    }
+  }, 10000); // كل 10 ثواني
+
 });
+
+
+
 
 // متغيرات عامة
 let myTasks = [];
