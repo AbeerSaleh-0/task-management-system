@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   const user = authAPI.getCurrentUser();
   console.log(user.name);
   // عرض اسم المستخدم
-  document.querySelector('.top-bar-left h1').textContent = `مرحباً، ${user.name || user.username}`;
+  document.querySelector('.top-bar-left h1').textContent = `مرحباً، ${authAPI.getUserName()}`;
+  //document.querySelector('.top-bar-left h1').textContent = `مرحباً، ${user.name || user.username}`;
   // تحميل المهام
   await loadMyTasks();
 });
@@ -215,9 +216,9 @@ function logout() {
 }
 
 // Toggle Sidebar
-function toggleSidebar() {
+/*function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('hidden');
-}
+}*/
 
 // دوال مساعدة
 function getStatusBadge(status) {

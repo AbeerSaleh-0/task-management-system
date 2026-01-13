@@ -29,6 +29,12 @@ function getUser() {
   return user ? JSON.parse(user) : null;
 }
 
+function getUserName() {
+  const user = getUser();
+  if (!user) return null;
+  return user.name || user.username;
+}
+
 // حذف بيانات المستخدم
 function removeUser() {
   localStorage.removeItem('user');
@@ -118,7 +124,11 @@ const authAPI = {
   // جلب المستخدم الحالي
   getCurrentUser: () => {
     return getUser();
-  }
+  },
+
+  getUserName: () => {
+  return getUserName();
+}
 };
 
 // ======== Admin APIs ========
