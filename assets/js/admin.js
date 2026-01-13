@@ -650,11 +650,39 @@ function showSection(section) {
 }
 
 // Toggle Sidebar
+/*
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   sidebar.classList.toggle('hidden');
 }
 
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.add('hidden');
+}*/
+
+// Toggle Sidebar
+function toggleSidebar(event) {
+  event.stopPropagation();
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('hidden');
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.add('hidden');
+}
+
+// إغلاق السايدبار عند الضغط في أي مكان
+document.addEventListener('click', function(event) {
+  const sidebar = document.getElementById('sidebar');
+  const menuBtn = document.querySelector('.menu-btn');
+  
+  // تأكد إن الضغط مو على السايدبار أو الزر
+  if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
+    closeSidebar();
+  }
+});
 // ملء select المستخدمين
 function populateUserFilter() {
   const select = document.getElementById('userFilter');
