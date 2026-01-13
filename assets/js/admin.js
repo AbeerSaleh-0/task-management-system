@@ -62,12 +62,19 @@ function updateOverview() {
   const total = allTasks.length;
   const completed = allTasks.filter(t => t.status === 'completed').length;
   const inProgress = allTasks.filter(t => t.status === 'in_progress').length;
-  const activeUsers = allUsers.length;
+   // حساب المهام المتأخرة
+  const overdueTasks = allTasks.filter(t => {
+    if (t.status === 'completed') return false; // المهام المكتملة ما تحسب
+    const dueDate = new Date(t.dueDate);
+    const today = new Date();
+    return dueDate < today; // إذا تاريخ التسليم قبل اليوم
+  }).length;
+ // const activeUsers = allUsers.length;
 
   document.getElementById('totalTasks').textContent = total;
   document.getElementById('completedTasks').textContent = completed;
   document.getElementById('inProgressTasks').textContent = inProgress;
-  document.getElementById('activeUsers').textContent = activeUsers;
+  document.getElementById('activeUsers').textContent = overdueTasks;
 }
 
 function getUserNameById(userId) {
