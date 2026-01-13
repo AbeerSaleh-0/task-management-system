@@ -205,6 +205,11 @@
      color: #ca8a04;
  }
 
+  .icon-red {
+     background: #fee2e2;
+     color: #dc2626;
+ }
+
  .overview-trend {
      display: flex;
      align-items: center;

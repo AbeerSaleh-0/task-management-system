@@ -63,6 +63,7 @@ function updateOverview() {
   const completed = allTasks.filter(t => t.status === 'completed').length;
   const inProgress = allTasks.filter(t => t.status === 'in_progress').length;
    // حساب المهام المتأخرة
+   /*
   const overdueTasks = allTasks.filter(t => {
     if (t.status === 'completed') return false;
     const dueDate = moment(t.due_date).format('YYYY-MM-DD');
@@ -71,7 +72,17 @@ function updateOverview() {
     console.log(today);
     return dueDate < today; 
   }).length;
-  console.log(overdueTasks.length);
+  console.log(overdueTasks.length);*/
+  const overdueTasks = allTasks.filter(t => {
+  if (t.status === 'completed') return false;
+  
+  const dueDate = moment(t.due_date);
+  const today = moment().startOf('day');
+  
+  return dueDate.isBefore(today); 
+}).length;
+
+console.log(overdueTasks);
  // const activeUsers = allUsers.length;
 
   document.getElementById('totalTasks').textContent = total;
