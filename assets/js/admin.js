@@ -64,10 +64,12 @@ function updateOverview() {
   const inProgress = allTasks.filter(t => t.status === 'in_progress').length;
    // حساب المهام المتأخرة
   const overdueTasks = allTasks.filter(t => {
-    if (t.status === 'completed') return false; // المهام المكتملة ما تحسب
+    if (t.status === 'completed') return false;
     const dueDate = new Date(t.dueDate);
+    console.log(dueDate);
     const today = new Date();
-    return dueDate < today; // إذا تاريخ التسليم قبل اليوم
+    console.log(today);
+    return dueDate < today; 
   }).length;
  // const activeUsers = allUsers.length;
 
