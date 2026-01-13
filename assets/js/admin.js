@@ -782,9 +782,10 @@ function populateUserFilter() {
 
   // إضافة المستخدمين
   allUsers.forEach(user => {
+    if (user.role === 'admin') return;
     const option = document.createElement('option');
     option.value = user.id;
-    option.textContent = user.name;
+    option.textContent = user.name || user.username;;
     select.appendChild(option);
   });
 }
