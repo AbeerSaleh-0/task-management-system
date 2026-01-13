@@ -660,7 +660,7 @@ function closeSidebar() {
   const sidebar = document.getElementById('sidebar');
   sidebar.classList.add('hidden');
 }*/
-
+/*
 // Toggle Sidebar
 function toggleSidebar(event) {
   event.stopPropagation();
@@ -682,7 +682,35 @@ document.addEventListener('click', function(event) {
   if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
     closeSidebar();
   }
+});*/
+
+// Toggle Sidebar
+function toggleSidebar(event) {
+  event.stopPropagation(); // يمنع الإغلاق التلقائي
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('hidden');
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.add('hidden');
+}
+
+// إغلاق السايدبار عند الضغط في أي مكان
+document.addEventListener('click', function(event) {
+  const sidebar = document.getElementById('sidebar');
+  
+  // إذا السايدبار مو مخفي وما ضغطت عليه، أقفله
+  if (!sidebar.classList.contains('hidden') && !sidebar.contains(event.target)) {
+    closeSidebar();
+  }
 });
+
+// منع إغلاق السايدبار لما تضغط داخله
+document.getElementById('sidebar').addEventListener('click', function(event) {
+  event.stopPropagation();
+});
+
 // ملء select المستخدمين
 function populateUserFilter() {
   const select = document.getElementById('userFilter');
