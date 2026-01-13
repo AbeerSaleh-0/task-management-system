@@ -36,11 +36,11 @@ async function loadMyTasks() {
 
 // تحديث الإحصائيات
 function updateOverview() {
-  //const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split('T')[0];
 
   // المهام اليوم
   //const todayTasks = myTasks.filter(t => moment(t.due_date) === moment(today)).length;
-  const today = moment().startOf('day'); // اليوم بداية اليوم (00:00:00)
+  const todays = moment().startOf('day'); // اليوم بداية اليوم (00:00:00)
   const todayTasks = myTasks.filter(t => {
   const taskDate = moment(t.due_date).startOf('day');
   return taskDate.isSame(today, 'day'); // مقارنة اليوم فقط
