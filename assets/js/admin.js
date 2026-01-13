@@ -683,7 +683,7 @@ document.addEventListener('click', function(event) {
     closeSidebar();
   }
 });*/
-
+/*
 // Toggle Sidebar
 function toggleSidebar(event) {
   event.stopPropagation(); // يمنع الإغلاق التلقائي
@@ -708,6 +708,46 @@ document.addEventListener('click', function(event) {
 
 // منع إغلاق السايدبار لما تضغط داخله
 document.getElementById('sidebar').addEventListener('click', function(event) {
+  event.stopPropagation();
+});*/
+
+// Toggle Sidebar
+function toggleSidebar(event) {
+  event.stopPropagation();
+  event.preventDefault(); // للجوال
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.toggle('hidden');
+}
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  sidebar.classList.add('hidden');
+}
+
+// دالة للإغلاق تشتغل على الكمبيوتر والجوال
+function handleClickOutside(event) {
+  const sidebar = document.getElementById('sidebar');
+  const menuBtn = document.querySelector('.menu-btn');
+  
+  // تأكد السايدبار مو مخفي
+  if (!sidebar.classList.contains('hidden')) {
+    // إذا الضغط مو على السايدبار أو الزر
+    if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
+      closeSidebar();
+    }
+  }
+}
+
+// إضافة الأحداث للكمبيوتر والجوال
+document.addEventListener('click', handleClickOutside);
+document.addEventListener('touchstart', handleClickOutside);
+
+// منع الإغلاق لما تضغط داخل السايدبار
+const sidebar = document.getElementById('sidebar');
+sidebar.addEventListener('click', function(event) {
+  event.stopPropagation();
+});
+sidebar.addEventListener('touchstart', function(event) {
   event.stopPropagation();
 });
 
