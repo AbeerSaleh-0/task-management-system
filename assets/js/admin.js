@@ -62,28 +62,28 @@ function updateOverview() {
   const total = allTasks.length;
   const completed = allTasks.filter(t => t.status === 'completed').length;
   const inProgress = allTasks.filter(t => t.status === 'in_progress').length;
-   // حساب المهام المتأخرة
-   /*
+  // حساب المهام المتأخرة
+  /*
+ const overdueTasks = allTasks.filter(t => {
+   if (t.status === 'completed') return false;
+   const dueDate = moment(t.due_date).format('YYYY-MM-DD');
+   console.log(dueDate);
+   const today = new Date();
+   console.log(today);
+   return dueDate < today; 
+ }).length;
+ console.log(overdueTasks.length);*/
   const overdueTasks = allTasks.filter(t => {
     if (t.status === 'completed') return false;
-    const dueDate = moment(t.due_date).format('YYYY-MM-DD');
-    console.log(dueDate);
-    const today = new Date();
-    console.log(today);
-    return dueDate < today; 
-  }).length;
-  console.log(overdueTasks.length);*/
-  const overdueTasks = allTasks.filter(t => {
-  if (t.status === 'completed') return false;
-  
-  const dueDate = moment(t.due_date);
-  const today = moment().startOf('day');
-  
-  return dueDate.isBefore(today); 
-}).length;
 
-console.log(overdueTasks);
- // const activeUsers = allUsers.length;
+    const dueDate = moment(t.due_date);
+    const today = moment().startOf('day');
+
+    return dueDate.isBefore(today);
+  }).length;
+
+  console.log(overdueTasks);
+  // const activeUsers = allUsers.length;
 
   document.getElementById('totalTasks').textContent = total;
   document.getElementById('completedTasks').textContent = completed;
@@ -124,9 +124,9 @@ function renderTodayTasks() {
           </tr>
         </thead>
         <tbody>
-          ${todayTasks.map(task =>{
-            const name = getUserNameById(task.user_id);
-            return `
+          ${todayTasks.map(task => {
+      const name = getUserNameById(task.user_id);
+      return `
             <tr style="background: ${task.status === 'completed' ? '#f0fdf4' : '#fef3c7'};">
               <td>
                 <h4>${task.title}</h4>
@@ -749,7 +749,7 @@ function closeSidebar() {
 function handleClickOutside(event) {
   const sidebar = document.getElementById('sidebar');
   const menuBtn = document.querySelector('.menu-btn');
-  
+
   // تأكد السايدبار مو مخفي
   if (!sidebar.classList.contains('hidden')) {
     // إذا الضغط مو على السايدبار أو الزر
@@ -765,10 +765,10 @@ document.addEventListener('touchstart', handleClickOutside);
 
 // منع الإغلاق لما تضغط داخل السايدبار
 const sidebar = document.getElementById('sidebar');
-sidebar.addEventListener('click', function(event) {
+sidebar.addEventListener('click', function (event) {
   event.stopPropagation();
 });
-sidebar.addEventListener('touchstart', function(event) {
+sidebar.addEventListener('touchstart', function (event) {
   event.stopPropagation();
 });
 
@@ -1020,7 +1020,13 @@ async function openEditTaskModal(taskId) {
     document.getElementById('editTaskDescription').value = task.description || '';
     document.getElementById('editTaskStatus').value = task.status;
     document.getElementById('editTaskPriority').value = task.priority;
-    document.getElementById('editTaskDueDate').value = task.due_date;
+    // ✅ تحويل التاريخ للصيغة الصحيحة باستخدام moment
+    if (task.due_date) {
+      const formattedDate = moment(task.due_date).format('YYYY-MM-DD');
+      document.getElementById('editTaskDueDate').value = formattedDate;
+    } else {
+      document.getElementById('editTaskDueDate').value = '';
+    }
     document.getElementById('editTaskManagerNotes').value = task.manager_notes || '';
 
     // ملء select المستخدمين
@@ -1092,15 +1098,8 @@ async function saveEditedTask() {
   const description = document.getElementById('editTaskDescription').value.trim();
   const status = document.getElementById('editTaskStatus').value;
   const priority = document.getElementById('editTaskPriority').value;
-  //const due_date = document.getElementById('editTaskDueDate').value;
+  const due_date = document.getElementById('editTaskDueDate').value;
   const user_id = document.getElementById('editTaskUser').value;
-// ✅ تحويل التاريخ للصيغة الصحيحة باستخدام moment
-if (task.due_date) {
-  const formattedDate = moment(task.due_date).format('YYYY-MM-DD');
-  document.getElementById('editTaskDueDate').value = formattedDate;
-} else {
-  document.getElementById('editTaskDueDate').value = '';
-}
   const manager_notes = document.getElementById('editTaskManagerNotes').value.trim();
 
   if (!title || !user_id) {
