@@ -11,11 +11,13 @@ const createTasksTable = async () => {
       priority ENUM('low', 'medium', 'high') DEFAULT 'medium',
       user_id INT NOT NULL,
       due_date DATE,
+      user_notes TEXT,
+      manager_notes TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     )
   `;
-  
+
   try {
     await db.execute(query);
     console.log('✅ جدول Tasks جاهز');
@@ -31,31 +33,31 @@ createTasksTable();
 const Task = {
   // إنشاء مهمة جديدة
   create: async (title, description, status, priority, user_id, due_date, manager_notes) => {
-  const query = 'INSERT INTO tasks (title, description, status, priority, user_id, due_date, manager_notes) VALUES (?, ?, ?, ?, ?, ?, ?)';
-  const [result] = await db.execute(query, [title, description, status, priority, user_id, due_date, manager_notes]);
-  return result;
-},
- // جلب مهمة بالـ id
-findById: async (id) => {
-  const query = 'SELECT * FROM tasks WHERE id = ?';
-  const [rows] = await db.execute(query, [id]);
-  
-  if (rows.length > 0) {
-    const task = rows[0];
-    // جلب المهام الفرعية
-    const [subtasks] = await db.execute(
-      'SELECT * FROM subtasks WHERE task_id = ? ORDER BY created_at ASC',
-      [task.id]
-    );
-    task.subtasks = subtasks;
-    return task;
-  }
-  
-  return null;
-},
- // جلب جميع المهام
-findAll: async () => {
-  const query = `
+    const query = 'INSERT INTO tasks (title, description, status, priority, user_id, due_date, manager_notes) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const [result] = await db.execute(query, [title, description, status, priority, user_id, due_date, manager_notes]);
+    return result;
+  },
+  // جلب مهمة بالـ id
+  findById: async (id) => {
+    const query = 'SELECT * FROM tasks WHERE id = ?';
+    const [rows] = await db.execute(query, [id]);
+
+    if (rows.length > 0) {
+      const task = rows[0];
+      // جلب المهام الفرعية
+      const [subtasks] = await db.execute(
+        'SELECT * FROM subtasks WHERE task_id = ? ORDER BY created_at ASC',
+        [task.id]
+      );
+      task.subtasks = subtasks;
+      return task;
+    }
+
+    return null;
+  },
+  // جلب جميع المهام
+  findAll: async () => {
+    const query = `
     SELECT tasks.*, 
            users.username,
            users.name as user_name
@@ -63,35 +65,35 @@ findAll: async () => {
     JOIN users ON tasks.user_id = users.id
     ORDER BY tasks.created_at DESC
   `;
-  const [rows] = await db.execute(query);
-  
-  // جلب المهام الفرعية
-  for (let task of rows) {
-    const [subtasks] = await db.execute(
-      'SELECT * FROM subtasks WHERE task_id = ? ORDER BY created_at ASC',
-      [task.id]
-    );
-    task.subtasks = subtasks;
-  }
-  
-  return rows;
-},
- // جلب مهام مستخدم معين
-findByUserId: async (user_id) => {
-  const query = 'SELECT * FROM tasks WHERE user_id = ? ORDER BY created_at DESC';
-  const [rows] = await db.execute(query, [user_id]);
-  
-  // جلب المهام الفرعية لكل مهمة
-  for (let task of rows) {
-    const [subtasks] = await db.execute(
-      'SELECT * FROM subtasks WHERE task_id = ? ORDER BY created_at ASC',
-      [task.id]
-    );
-    task.subtasks = subtasks;
-  }
-  
-  return rows;
-},
+    const [rows] = await db.execute(query);
+
+    // جلب المهام الفرعية
+    for (let task of rows) {
+      const [subtasks] = await db.execute(
+        'SELECT * FROM subtasks WHERE task_id = ? ORDER BY created_at ASC',
+        [task.id]
+      );
+      task.subtasks = subtasks;
+    }
+
+    return rows;
+  },
+  // جلب مهام مستخدم معين
+  findByUserId: async (user_id) => {
+    const query = 'SELECT * FROM tasks WHERE user_id = ? ORDER BY created_at DESC';
+    const [rows] = await db.execute(query, [user_id]);
+
+    // جلب المهام الفرعية لكل مهمة
+    for (let task of rows) {
+      const [subtasks] = await db.execute(
+        'SELECT * FROM subtasks WHERE task_id = ? ORDER BY created_at ASC',
+        [task.id]
+      );
+      task.subtasks = subtasks;
+    }
+
+    return rows;
+  },
   // تحديث حالة المهمة
   updateStatus: async (id, status) => {
     const query = 'UPDATE tasks SET status = ? WHERE id = ?';
@@ -100,11 +102,37 @@ findByUserId: async (user_id) => {
   },
 
   // تحديث المهمة كاملة
+  // تحديث المهمة كاملة
+  update: async (id, title, description, status, priority, due_date, user_id, manager_notes) => {
+    const query = `
+    UPDATE tasks 
+    SET title = ?, 
+        description = ?, 
+        status = ?, 
+        priority = ?, 
+        due_date = ?, 
+        user_id = ?, 
+        manager_notes = ?
+    WHERE id = ?
+  `;
+    const [result] = await db.execute(query, [
+      title,
+      description,
+      status,
+      priority,
+      due_date,
+      user_id,
+      manager_notes,
+      id
+    ]);
+    return result;
+  },
+  /*
   update: async (id, title, description, status, priority, due_date) => {
     const query = 'UPDATE tasks SET title = ?, description = ?, status = ?, priority = ?, due_date = ? WHERE id = ?';
     const [result] = await db.execute(query, [title, description, status, priority, due_date, id]);
     return result;
-  },
+  },*/
 
   // حذف مهمة
   delete: async (id) => {

@@ -159,6 +159,40 @@ const updateTaskStatus = async (req, res, next) => {
 const updateTask = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const { title, description, status, priority, due_date, user_id, manager_notes } = req.body;
+
+    const task = await Task.findById(id);
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: 'Task not found'
+      });
+    }
+
+    await Task.update(
+      id,
+      title || task.title,
+      description !== undefined ? description : task.description,
+      status || task.status,
+      priority || task.priority,
+      due_date !== undefined ? due_date : task.due_date,
+      user_id !== undefined ? user_id : task.user_id,
+      manager_notes !== undefined ? manager_notes : task.manager_notes
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Task updated successfully'
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+/*
+const updateTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
     const { title, description, status, priority, due_date } = req.body;
 
     // التحقق من وجود المهمة
@@ -189,7 +223,7 @@ const updateTask = async (req, res, next) => {
     next(error);
   }
 };
-
+*/
 // حذف مهمة
 const deleteTask = async (req, res, next) => {
   try {
