@@ -1014,7 +1014,8 @@ async function openEditTaskModal(taskId) {
   try {
     const response = await taskAPI.getById(taskId);
     const task = response.task;
-
+    console.log('📅 التاريخ من API:', task.due_date); // ✅ أضف هذا السطر
+    console.log('📅 نوع البيانات:', typeof task.due_date); // ✅ وهذا
     document.getElementById('editTaskId').value = task.id;
     document.getElementById('editTaskTitle').value = task.title;
     document.getElementById('editTaskDescription').value = task.description || '';
