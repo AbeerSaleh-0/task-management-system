@@ -1048,6 +1048,7 @@ function closeEditTaskModal() {
 }
 
 // حفظ التعديلات
+/*
 async function saveEditedTask() {
   const taskId = document.getElementById('editTaskId').value;
   const title = document.getElementById('editTaskTitle').value.trim();
@@ -1081,6 +1082,47 @@ async function saveEditedTask() {
 
   } catch (error) {
     console.error('خطأ في تحديث المهمة:', error);
+    alert('حدث خطأ في تحديث المهمة');
+  }
+}*/
+
+async function saveEditedTask() {
+  const taskId = document.getElementById('editTaskId').value;
+  const title = document.getElementById('editTaskTitle').value.trim();
+  const description = document.getElementById('editTaskDescription').value.trim();
+  const status = document.getElementById('editTaskStatus').value;
+  const priority = document.getElementById('editTaskPriority').value;
+  const due_date = document.getElementById('editTaskDueDate').value;
+  const user_id = document.getElementById('editTaskUser').value;
+  const manager_notes = document.getElementById('editTaskManagerNotes').value.trim();
+
+  if (!title || !user_id) {
+    alert('يرجى ملء الحقول المطلوبة');
+    return;
+  }
+
+  const updateData = {
+    title,
+    description: description.length > 0 ? description : null,
+    status,
+    priority,
+    user_id: parseInt(user_id),
+    due_date,
+    manager_notes: manager_notes.length > 0 ? manager_notes : null
+  };
+
+  console.log('📤 Data being sent:', updateData); // ✅ شوف ايش يطلع هنا
+
+  try {
+    const response = await taskAPI.update(taskId, updateData);
+    console.log('📥 Response from server:', response); // ✅ وشوف الرد
+
+    alert('تم تحديث المهمة بنجاح!');
+    closeEditTaskModal();
+    await loadDashboardData();
+
+  } catch (error) {
+    console.error('❌ خطأ في تحديث المهمة:', error);
     alert('حدث خطأ في تحديث المهمة');
   }
 }
