@@ -1067,12 +1067,12 @@ async function saveEditedTask() {
     // تحديث المهمة
     await taskAPI.update(taskId, {
       title,
-      description: description || null,
+      description: description.length > 0 ? description : null,
       status,
       priority,
       user_id: parseInt(user_id),
       due_date,
-      manager_notes: manager_notes || null
+      manager_notes: manager_notes.length > 0 ? manager_notes : null
     });
 
     alert('تم تحديث المهمة بنجاح!');
