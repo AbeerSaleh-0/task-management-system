@@ -1014,20 +1014,19 @@ async function openEditTaskModal(taskId) {
   try {
     const response = await taskAPI.getById(taskId);
     const task = response.task;
-    console.log('📅 التاريخ من API:', task.due_date); // ✅ أضف هذا السطر
-    console.log('📅 نوع البيانات:', typeof task.due_date); // ✅ وهذا
+    
     document.getElementById('editTaskId').value = task.id;
     document.getElementById('editTaskTitle').value = task.title;
     document.getElementById('editTaskDescription').value = task.description || '';
     document.getElementById('editTaskStatus').value = task.status;
     document.getElementById('editTaskPriority').value = task.priority;
-    // ✅ تحويل التاريخ للصيغة الصحيحة باستخدام moment
-    if (task.due_date) {
-      const formattedDate = moment(task.due_date).format('YYYY-MM-DD');
-      document.getElementById('editTaskDueDate').value = formattedDate;
-    } else {
-      document.getElementById('editTaskDueDate').value = '';
-    }
+    // ✅ استخراج التاريخ مباشرة من الـ string
+if (task.due_date) {
+  const formattedDate = task.due_date.split('T')[0]; // 2026-01-14
+  document.getElementById('editTaskDueDate').value = formattedDate;
+} else {
+  document.getElementById('editTaskDueDate').value = '';
+}
     document.getElementById('editTaskManagerNotes').value = task.manager_notes || '';
 
     // ملء select المستخدمين
