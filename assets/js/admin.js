@@ -1092,8 +1092,15 @@ async function saveEditedTask() {
   const description = document.getElementById('editTaskDescription').value.trim();
   const status = document.getElementById('editTaskStatus').value;
   const priority = document.getElementById('editTaskPriority').value;
-  const due_date = document.getElementById('editTaskDueDate').value;
+  //const due_date = document.getElementById('editTaskDueDate').value;
   const user_id = document.getElementById('editTaskUser').value;
+// ✅ تحويل التاريخ للصيغة الصحيحة باستخدام moment
+if (task.due_date) {
+  const formattedDate = moment(task.due_date).format('YYYY-MM-DD');
+  document.getElementById('editTaskDueDate').value = formattedDate;
+} else {
+  document.getElementById('editTaskDueDate').value = '';
+}
   const manager_notes = document.getElementById('editTaskManagerNotes').value.trim();
 
   if (!title || !user_id) {
