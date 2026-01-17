@@ -827,23 +827,21 @@ body {
 }
 
 .logo {
-    width: 45px;
     height: 45px;
-    background: linear-gradient(135deg, rgba(70, 130, 180, 0.9) 0%, rgba(100, 149, 237, 0.9) 100%);
-    border-radius: 12px;
+    width: auto;
+    max-width: 150px;
+    background: transparent; /* أو احذف الخلفية تماماً */
+    border-radius: 0; /* أو احذفه */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
-    font-size: 1.5rem;
-    color: white;
-    box-shadow: 0 4px 20px rgba(70, 130, 180, 0.3);
+    padding: 0;
 }
 
-.logo-text {
-    color: #1f2937;
-    font-size: 1.25rem;
-    font-weight: 700;
+.logo img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
 }
 
 /* ===================================
