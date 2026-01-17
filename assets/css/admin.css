@@ -909,6 +909,7 @@ body {
 
 .nav-item.active:hover {
     background: linear-gradient(135deg, rgba(70, 130, 180, 1) 0%, rgba(100, 149, 237, 1) 100%);
+    color: white;
 }
 
 /* Navigation Sections */
