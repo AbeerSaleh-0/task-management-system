@@ -32,7 +32,7 @@
                             d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
                         </path>
                     </svg>
-                    المستخدمين
+                    الموظفين
                 </button>
                 <button class="nav-item" onclick="showSection('tasks')">
                     <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -186,7 +186,7 @@
                                 <thead>
                                     <tr>
                                         <th>اسم المهمة</th>
-                                        <th>المستخدم</th>
+                                        <th>الموظف</th>
                                         <th>الحالة</th>
                                         <th>الموعد النهائي</th>
                                         <th>الإجراءات</th>
@@ -203,12 +203,12 @@
             <div id="usersSection" style="display: none;">
                 <div class="table-container">
                     <div class="table-header">
-                        <h2 class="section-title">المستخدمين</h2>
+                        <h2 class="section-title">الموظفين</h2>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>المستخدم</th>
+                                <th>الموظف</th>
                                 <th>المهام</th>
                             </tr>
                         </thead>
@@ -224,7 +224,7 @@
                     <h2 class="section-title">إدارة المهام</h2>
                     <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
                         <select class="form-select" id="userFilter" onchange="filterTasks()" style="width: 200px;">
-                            <option value="">جميع المستخدمين</option>
+                            <option value="">جميع الموظفين</option>
                         </select>
 
                         <input type="date" class="form-input" id="dateFrom" onchange="filterTasks()"
@@ -254,7 +254,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>اسم المهمة</th>
-                                <th>المستخدم</th>
+                                <th>الموظف</th>
                                 <th>الحالة</th>
                                 <th>الموعد النهائي</th>
                                 <th>الإجراءات</th>
@@ -277,7 +277,7 @@
     <div class="modal" id="userDetailsModal">
         <div class="modal-content" style="max-width: 700px;">
             <div class="modal-header">
-                <h3 class="modal-title" id="userModalTitle">تفاصيل المستخدم</h3>
+                <h3 class="modal-title" id="userModalTitle">تفاصيل الموظف</h3>
                 <button class="close-btn" onclick="closeUserDetailsModal()">
                     <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
@@ -353,9 +353,9 @@
 
                     <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
                         <div class="form-group">
-                            <label class="form-label">المستخدم <span class="required">*</span></label>
+                            <label class="form-label">الموظف <span class="required">*</span></label>
                             <select class="form-select" id="editTaskUser" required>
-                                <option value="">اختر المستخدم</option>
+                                <option value="">اختر الموظف</option>
                             </select>
                         </div>
 

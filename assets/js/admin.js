@@ -117,7 +117,7 @@ function renderTodayTasks() {
         <thead>
           <tr>
             <th>اسم المهمة</th>
-            <th>المستخدم</th>
+            <th>الموظف</th>
             <th>الحالة</th>
             <th>الموعد النهائي</th>
             <th>الإجراءات</th>
@@ -244,7 +244,7 @@ function renderTasks() {
   });
 
   const countText = selectedUser ?
-    `عرض مهام المستخدم (${filteredTasks.length})` :
+    `عرض مهام الموظف (${filteredTasks.length})` :
     `عرض جميع المهام (${filteredTasks.length})`;
 
   if (document.getElementById('filteredTasksCount')) {
@@ -361,8 +361,8 @@ async function openUserDetailsModal(user) {
     document.getElementById('userDetailsModal').style.display = 'flex';
 
   } catch (error) {
-    console.error('خطأ في جلب مهام المستخدم:', error);
-    alert('حدث خطأ في تحميل مهام المستخدم');
+    console.error('خطأ في جلب مهام الموظف:', error);
+    alert('حدث خطأ في تحميل مهام الموظف');
   }
 }
 // إغلاق modal
@@ -523,7 +523,7 @@ async function viewTask(taskId) {
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
           <div>
-            <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0.25rem;">المستخدم</p>
+            <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0.25rem;">الموظف</p>
             <p style="font-weight: 500;">${getUserNameById(task.user_id) || task.username || 'غير معروف'}</p>
           </div>
           <div>
@@ -825,7 +825,7 @@ function populateUserFilter() {
   if (!select) return;
 
   // مسح الخيارات القديمة (عدا "جميع المستخدمين")
-  select.innerHTML = '<option value="">جميع المستخدمين</option>';
+  select.innerHTML = '<option value="">جميع الموظفين</option>';
 
   // إضافة المستخدمين
   allUsers.forEach(user => {
@@ -1078,7 +1078,7 @@ if (task.due_date) {
 
     // ملء select المستخدمين
     const userSelect = document.getElementById('editTaskUser');
-    userSelect.innerHTML = '<option value="">اختر المستخدم</option>';
+    userSelect.innerHTML = '<option value="">اختر الموظف</option>';
     allUsers.forEach(user => {
       const option = document.createElement('option');
       option.value = user.id;
