@@ -901,6 +901,7 @@ body {
 
 .nav-item.active:hover {
     background: #1e3a8a;
+    color: white;
 }
 
 .nav-section {
