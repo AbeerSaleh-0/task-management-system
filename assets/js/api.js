@@ -135,8 +135,8 @@ const authAPI = {
 
 const adminAPI = {
   // إنشاء مستخدم جديد
-  createUser: async (username, password, role = 'user') => {
-    return await apiCall('/admin/users', 'POST', { username, password, role });
+  createUser: async (username, password, role = 'user', phone = null) => {
+    return await apiCall('/admin/users', 'POST', { username, password, role, phone });
   },
 
   // جلب جميع المستخدمين
@@ -162,6 +162,10 @@ const adminAPI = {
   // تحديث اسم المستخدم
   updateUserName: async (id, name) => {
     return await apiCall(`/admin/users/${id}/name`, 'PATCH', { name });
+  },
+
+  updateUserPhone: async (id, phone) => {
+    return await apiCall(`/admin/users/${id}/phone`, 'PATCH', { phone });
   },
 
   // حذف مستخدم

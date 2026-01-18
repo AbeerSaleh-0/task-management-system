@@ -7,6 +7,7 @@ const createUsersTable = async () => {
       id INT AUTO_INCREMENT PRIMARY KEY,
       username VARCHAR(50) NOT NULL UNIQUE,
       name VARCHAR(100) NOT NULL,
+      phone VARCHAR(20) DEFAULT NULL,
       password VARCHAR(255) NOT NULL,
       role ENUM('admin', 'user', 'manager') DEFAULT 'user',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -27,12 +28,16 @@ createUsersTable();
 // دوال للتعامل مع جدول Users
 const User = {
   // إنشاء مستخدم جديد
-  create: async (username, password, role = 'user', name = null) => {
+/*  create: async (username, password, role = 'user', name = null) => {
     const query = 'INSERT INTO users (username, name, password, role) VALUES (?, ?, ?, ?)';
     const [result] = await db.execute(query, [username, name, password, role]);
     return result;
-},
-
+},*/
+    create: async (username, password, role = 'user', name = null, phone = null) => {
+    const query = 'INSERT INTO users (username, name, phone, password, role) VALUES (?, ?, ?, ?, ?)';
+    const [result] = await db.execute(query, [username, name, phone, password, role]);
+    return result;
+  },
   // البحث عن مستخدم بالـ username
   findByUsername: async (username) => {
     const query = 'SELECT * FROM users WHERE username = ?';
@@ -71,6 +76,11 @@ const User = {
   updatePassword: async (id, hashedPassword) => {
     const query = 'UPDATE users SET password = ? WHERE id = ?';
     const [result] = await db.execute(query, [hashedPassword, id]);
+    return result;
+  },
+    updatePhone: async (id, phone) => {
+    const query = 'UPDATE users SET phone = ? WHERE id = ?';
+    const [result] = await db.execute(query, [phone, id]);
     return result;
   },
   

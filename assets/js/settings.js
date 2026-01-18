@@ -85,8 +85,9 @@ function renderUsers() {
         }) : 'غير محدد';
 
         // الحرف الأول من الاسم أو اسم المستخدم
-        const displayName = user.name || user.username;
+       const displayName = user.name || user.username;
         const avatar = displayName.charAt(0).toUpperCase();
+        const phone = user.phone || 'غير محدد'; 
 
         return `
             <tr>
@@ -99,6 +100,7 @@ function renderUsers() {
                         </div>
                     </div>
                 </td>
+                <td>${phone}</td>  
                 <td><span class="role-badge role-${user.role}">${getRoleText(user.role)}</span></td>
                 <td>${joinDate}</td>
                 <td>
@@ -159,6 +161,7 @@ function editUser(id) {
     document.getElementById('userUsername').value = user.username;
     document.getElementById('userUsername').disabled = true; // تعطيل تعديل اسم المستخدم
     document.getElementById('userName').value = user.name || '';
+    document.getElementById('userPhone').value = user.phone || '';
     document.getElementById('userRole').value = user.role;
     //document.getElementById('userStatus').value = user.status || 'active';
     
@@ -178,9 +181,14 @@ async function saveUser() {
     const userId = document.getElementById('userId').value;
     const username = document.getElementById('userUsername').value.trim();
     const name = document.getElementById('userName').value.trim();
+    const phone = document.getElementById('userPhone').value.trim();
     const role = document.getElementById('userRole').value;
     //const status = document.getElementById('userStatus').value;
 
+    if (phone && !/^(05|5)\d{8}$/.test(phone)) {
+        alert('رقم الجوال غير صحيح. يجب أن يبدأ بـ 05 ويتكون من 10 أرقام');
+        return;
+    }
     if (!username || !role) {
         alert('يرجى ملء الحقول المطلوبة (اسم المستخدم والصلاحية)');
         return;
@@ -208,7 +216,7 @@ async function saveUser() {
                 return;
             }
 
-            const response = await adminAPI.createUser(username, password, role);
+            const response = await adminAPI.createUser(username, password, role, phone);
 
             if (response.success) {
                 // تحديث الاسم الكامل إذا تم إدخاله
@@ -229,7 +237,11 @@ async function saveUser() {
                 const nameResponse = await adminAPI.updateUserName(userId, name);
                 if (!nameResponse.success) updateSuccess = false;
             }
-            
+            // ✅ تحديث رقم الجوال
+            if (phone !== '') {
+                const phoneResponse = await adminAPI.updateUserPhone(userId, phone);
+                if (!phoneResponse.success) updateSuccess = false;
+            }
             // تحديث الدور
             const roleResponse = await adminAPI.updateUserRole(userId, role);
             if (!roleResponse.success) updateSuccess = false;
