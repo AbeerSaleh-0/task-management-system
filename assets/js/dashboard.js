@@ -51,20 +51,13 @@ async function loadMyTasks(isAutoRefresh = false) {
     if (isAutoRefresh) {
       // فحص إذا في مهام جديدة
       if (newTasks.length > myTasks.length) {
-        // إيجاد المهام الجديدة فقط
         const existingTaskIds = myTasks.map(t => t.id);
         const newlyAddedTasks = newTasks.filter(t => !existingTaskIds.includes(t.id));
         
-        // إضافة المهام الجديدة للقائمة
         myTasks = [...myTasks, ...newlyAddedTasks];
-        
-        // رسم المهام الجديدة فقط
         renderNewTasks(newlyAddedTasks);
-        
-        // تحديث الإحصائيات
         updateOverview();
         
-        // إشعار المستخدم
         if (newlyAddedTasks.length > 0) {
           showNotification(`تم إضافة ${newlyAddedTasks.length} مهمة جديدة`);
         }
@@ -73,6 +66,9 @@ async function loadMyTasks(isAutoRefresh = false) {
         myTasks = newTasks;
         updateOverview();
         renderTasks();
+      } else {
+        // ✨ فحص التحديثات على المهام الموجودة
+        checkForTaskUpdates(newTasks);
       }
     } else {
       // التحميل الأول
@@ -88,6 +84,179 @@ async function loadMyTasks(isAutoRefresh = false) {
     if (!isAutoRefresh) {
       alert('حدث خطأ في تحميل المهام');
     }
+  }
+}
+
+function checkForTaskUpdates(newTasks) {
+  let hasUpdates = false;
+  
+  newTasks.forEach(newTask => {
+    const oldTask = myTasks.find(t => t.id === newTask.id);
+    
+    if (oldTask) {
+      // فحص تحديثات المهام الفرعية
+      if (hasSubtaskChanges(oldTask, newTask)) {
+        updateTaskSubtasks(newTask.id, newTask.subtasks);
+        hasUpdates = true;
+      }
+      
+      // فحص تحديثات حالة المهمة الرئيسية
+      if (oldTask.status !== newTask.status) {
+        updateTaskStatus(newTask.id, newTask.status);
+        hasUpdates = true;
+      }
+      
+      // فحص تحديثات ملاحظات المدير
+      if (oldTask.manager_notes !== newTask.manager_notes) {
+        updateManagerNotes(newTask.id, newTask.manager_notes);
+        hasUpdates = true;
+      }
+      
+      // تحديث البيانات المحلية
+      Object.assign(oldTask, newTask);
+    }
+  });
+  
+  if (hasUpdates) {
+    updateOverview();
+    showNotification('تم تحديث بعض المهام');
+  }
+}
+
+// ✨ فحص إذا في تغييرات في المهام الفرعية
+function hasSubtaskChanges(oldTask, newTask) {
+  const oldSubtasks = oldTask.subtasks || [];
+  const newSubtasks = newTask.subtasks || [];
+  
+  if (oldSubtasks.length !== newSubtasks.length) return true;
+  
+  for (let i = 0; i < newSubtasks.length; i++) {
+    const oldSub = oldSubtasks.find(s => s.id === newSubtasks[i].id);
+    if (!oldSub || oldSub.status !== newSubtasks[i].status) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+// ✨ تحديث المهام الفرعية في الواجهة
+function updateTaskSubtasks(taskId, newSubtasks) {
+  const subtasksContainer = document.getElementById(`subtasks-${taskId}`);
+  if (!subtasksContainer) return;
+  
+  const completedSubtasks = newSubtasks.filter(st => st.status === 'completed').length;
+  const totalSubtasks = newSubtasks.length;
+  
+  // تحديث عداد المهام الفرعية في الزر
+  const toggleButton = subtasksContainer.previousElementSibling;
+  if (toggleButton && toggleButton.classList.contains('subtasks-toggle')) {
+    const buttonText = toggleButton.querySelector('svg').nextSibling;
+    if (buttonText) {
+      buttonText.textContent = ` المهام الفرعية (${completedSubtasks}/${totalSubtasks})`;
+    }
+  }
+  
+  // تحديث قائمة المهام الفرعية
+  subtasksContainer.innerHTML = newSubtasks.map(subtask => `
+    <div class="subtask-item" style="padding: 8px 0;">
+      <span style="display: inline-block; width: 20px; height: 20px; border-radius: 4px; background: ${subtask.status === 'completed' ? '#10b981' : '#e5e7eb'}; margin-left: 10px; position: relative; vertical-align: middle;">
+        ${subtask.status === 'completed' ? '<svg style="width: 14px; height: 14px; position: absolute; top: 3px; left: 3px;" fill="white" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>' : ''}
+      </span>
+      <span class="subtask-name ${subtask.status === 'completed' ? 'completed' : ''}">${subtask.title}</span>
+    </div>
+  `).join('');
+  
+  // إضافة تأثير بصري
+  subtasksContainer.style.animation = 'pulse 0.5s ease-out';
+  setTimeout(() => {
+    subtasksContainer.style.animation = '';
+  }, 500);
+}
+
+// ✨ تحديث حالة المهمة الرئيسية
+function updateTaskStatus(taskId, newStatus) {
+  const taskElement = document.getElementById(`task-${taskId}`);
+  if (!taskElement) return;
+  
+  // تحديث الـ badge
+  const statusBadge = taskElement.querySelector('.status-badge');
+  if (statusBadge) {
+    const badges = {
+      'pending': { text: 'لم تبدأ', class: 'status-not-started' },
+      'in_progress': { text: 'قيد التنفيذ', class: 'status-in-progress' },
+      'completed': { text: 'منجزة', class: 'status-done' }
+    };
+    
+    const badge = badges[newStatus];
+    if (badge) {
+      statusBadge.className = `status-badge ${badge.class}`;
+      statusBadge.textContent = badge.text;
+    }
+  }
+  
+  // تحديث العنوان (خط في الوسط للمكتملة)
+  const taskTitle = taskElement.querySelector('.task-title');
+  if (taskTitle) {
+    if (newStatus === 'completed') {
+      taskTitle.classList.add('completed');
+    } else {
+      taskTitle.classList.remove('completed');
+    }
+  }
+  
+  // تأثير بصري
+  taskElement.style.animation = 'pulse 0.5s ease-out';
+  setTimeout(() => {
+    taskElement.style.animation = '';
+  }, 500);
+}
+
+// ✨ تحديث ملاحظات المدير
+function updateManagerNotes(taskId, managerNotes) {
+  const taskElement = document.getElementById(`task-${taskId}`);
+  if (!taskElement) return;
+  
+  const taskDetails = taskElement.querySelector('.task-details');
+  if (!taskDetails) return;
+  
+  // البحث عن div ملاحظات المدير الحالية
+  let managerNotesDiv = taskDetails.querySelector('.task-notes[style*="fef3c7"]');
+  
+  if (managerNotes) {
+    const notesHTML = `
+      <div class="task-notes" style="background: #fef3c7; border-right: 3px solid #f59e0b;">
+        <strong>ملاحظات المدير:</strong> ${managerNotes}
+      </div>
+    `;
+    
+    if (managerNotesDiv) {
+      // تحديث الموجود
+      managerNotesDiv.outerHTML = notesHTML;
+    } else {
+      // إضافة جديد بعد الوصف
+      const descriptionDiv = taskDetails.querySelector('.task-notes:not([style*="fef3c7"]):not([style*="e0f2fe"])');
+      if (descriptionDiv) {
+        descriptionDiv.insertAdjacentHTML('afterend', notesHTML);
+      } else {
+        const taskMeta = taskDetails.querySelector('.task-meta');
+        if (taskMeta) {
+          taskMeta.insertAdjacentHTML('afterend', notesHTML);
+        }
+      }
+    }
+    
+    // تأثير بصري
+    managerNotesDiv = taskDetails.querySelector('.task-notes[style*="fef3c7"]');
+    if (managerNotesDiv) {
+      managerNotesDiv.style.animation = 'pulse 0.5s ease-out';
+      setTimeout(() => {
+        managerNotesDiv.style.animation = '';
+      }, 500);
+    }
+  } else if (managerNotesDiv) {
+    // إزالة ملاحظات المدير إذا تم حذفها
+    managerNotesDiv.remove();
   }
 }
 
@@ -235,7 +404,7 @@ function renderTasks() {
     const totalSubtasks = task.subtasks ? task.subtasks.length : 0;
 
     return `
-      <div class="task-item">
+      <div class="task-item" id="task-${task.id}">
         <div class="task-content">
           <div class="task-details" style="width: 100%;">
             <div class="task-header">
