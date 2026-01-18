@@ -101,7 +101,7 @@ function renderUsers() {
                     </div>
                 </td>  
                 <td><span class="role-badge role-${user.role}">${getRoleText(user.role)}</span></td>
-                <td>${phone}</td>
+                <td>${user.phone}</td>
                 <td>${joinDate}</td>
                 <td>
                     <div class="action-buttons">
