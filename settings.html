@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>الإعدادات - إدارة المستخدمين</title>
+    <title>الإعدادات - إدارة الموظفين</title>
     <link rel="stylesheet" href="assets/css/admin.css">
     <style>
         .top-bar {
@@ -132,8 +132,8 @@
             <div class="settings-header">
                 <div>
                     <h2 style="font-size: 1.5rem; font-weight: 600; color: #1f2937; margin-bottom: 0.5rem;">إدارة
-                        المستخدمين</h2>
-                    <p style="color: #6b7280;">إضافة وتعديل وحذف المستخدمين والصلاحيات</p>
+                        الموظفين</h2>
+                    <p style="color: #6b7280;">إضافة وتعديل وحذف الموظفين والصلاحيات</p>
                 </div>
                 <button class="btn btn-primary" onclick="openAddUserModal()">
                     <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,14 +141,14 @@
                             d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z">
                         </path>
                     </svg>
-                    إضافة مستخدم جديد
+                    إضافة موظف جديد
                 </button>
             </div>
 
             <!-- Stats Grid -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <h4>إجمالي المستخدمين</h4>
+                    <h4>إجمالي الموظفين</h4>
                     <p id="totalUsers">4</p>
                 </div>
                 <div class="stat-card">
@@ -156,7 +156,7 @@
                     <p id="totalAdmins" style="color: #7c3aed;">2</p>
                 </div>
                 <div class="stat-card">
-                    <h4>المستخدمين</h4>
+                    <h4>الموظفين</h4>
                     <p id="totalRegularUsers" style="color: #2563eb;">2</p>
                 </div>
             </div>
@@ -164,12 +164,12 @@
             <!-- Users Table -->
             <div class="table-container">
                 <div class="table-header">
-                    <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937;">قائمة المستخدمين</h3>
+                    <h3 style="font-size: 1.125rem; font-weight: 600; color: #1f2937;">قائمة الموظفين</h3>
                     <div style="display: flex; gap: 1rem;">
                         <select class="form-select" id="roleFilter" onchange="filterUsers()" style="width: 150px;">
                             <option value="">كل الصلاحيات</option>
                             <option value="admin">مشرفين</option>
-                            <option value="user">مستخدمين</option>
+                            <option value="user">موظفين</option>
                         </select>
                         <!--<select class="form-select" id="statusFilter" onchange="filterUsers()" style="width: 150px;">
                             <option value="">كل الحالات</option>
@@ -181,7 +181,7 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>المستخدم</th>
+                            <th>الموظف</th>
                             <th>الصلاحية</th>
                             <!--<th>الحالة</th>-->
                             <th>تاريخ الانضمام</th>
@@ -198,7 +198,7 @@
     <div class="modal" id="userModal">
         <div class="modal-content" style="max-width: 500px;">
             <div class="modal-header">
-                <h3 class="modal-title" id="userModalTitle">إضافة مستخدم جديد</h3>
+                <h3 class="modal-title" id="userModalTitle">إضافة موظف جديد</h3>
                 <button class="close-btn" onclick="closeUserModal()">
                     <svg class="icon-lg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
@@ -211,9 +211,9 @@
                     <input type="hidden" id="userId">
 
                     <div class="form-group">
-                        <label class="form-label">اسم المستخدم <span style="color: #dc2626;">*</span></label>
+                        <label class="form-label">اسم الموظف <span style="color: #dc2626;">*</span></label>
                         <input type="text" class="form-input" id="userUsername"
-                            placeholder="أدخل اسم المستخدم (بدون مسافات)" required>
+                            placeholder="أدخل اسم الموظف (بدون مسافات)" required>
                         <small style="color: #6b7280; font-size: 0.75rem;">سيستخدم لتسجيل الدخول</small>
                     </div>
 
@@ -225,7 +225,7 @@
                     <div class="form-group">
                         <label class="form-label">الصلاحية <span style="color: #dc2626;">*</span></label>
                         <select class="form-select" id="userRole" required>
-                            <option value="user">مستخدم</option>
+                            <option value="user">موظف</option>
                             <option value="admin">مشرف</option>
                         </select>
                     </div>

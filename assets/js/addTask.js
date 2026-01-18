@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // تحميل قائمة المستخدمين
+  // تحميل قائمة الموظفين
   await loadUsers();
 
   // تعيين الحد الأدنى للتاريخ (اليوم)
@@ -30,14 +30,14 @@ let subtasks = [];
 let subtaskCounter = 0;
 let allUsers = [];
 
-// تحميل قائمة المستخدمين
+// تحميل قائمة الموظفين
 async function loadUsers() {
   try {
     const response = await adminAPI.getAllUsers();
     allUsers = response.users || [];
 
     const select = document.getElementById('taskUser');
-    select.innerHTML = '<option value="">اختر المستخدم</option>';
+    select.innerHTML = '<option value="">اختر الموظف</option>';
 
     allUsers.forEach(user => {
       const option = document.createElement('option');
@@ -48,8 +48,8 @@ async function loadUsers() {
     });
 
   } catch (error) {
-    console.error('خطأ في تحميل المستخدمين:', error);
-    alert('حدث خطأ في تحميل قائمة المستخدمين');
+    console.error('خطأ في تحميل الموظفين:', error);
+    alert('حدث خطأ في تحميل قائمة الموظفين');
   }
 }
 
@@ -149,7 +149,7 @@ document.getElementById('taskForm').addEventListener('submit', async function(e)
   }
 
   if (!user_id) {
-    alert('يرجى اختيار المستخدم');
+    alert('يرجى اختيار الموظف');
     return;
   }
 

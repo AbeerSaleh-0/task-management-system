@@ -32,7 +32,7 @@ async function loadUsers() {
             updateStats();
         }
     } catch (error) {
-        console.error('خطأ في جلب المستخدمين:', error);
+        console.error('خطأ في جلب الموظفين:', error);
         alert('حدث خطأ في تحميل البيانات');
         
         // إذا كان خطأ في التوثيق، إعادة التوجيه لصفحة تسجيل الدخول
@@ -124,14 +124,14 @@ function renderUsers() {
 function getRoleText(role) {
     const roles = {
         'admin': 'مشرف',
-        'user': 'مستخدم',
+        'user': 'موظف',
         'manager': 'مدير'
     };
     return roles[role] || role;
 }
 // فتح نافذة إضافة مستخدم
 function openAddUserModal() {
-    document.getElementById('userModalTitle').textContent = 'إضافة مستخدم جديد';
+    document.getElementById('userModalTitle').textContent = 'إضافة موظف جديد';
     document.getElementById('userForm').reset();
     document.getElementById('userId').value = '';
     
@@ -154,7 +154,7 @@ function editUser(id) {
     const user = users.find(u => u.id === id);
     if (!user) return;
 
-    document.getElementById('userModalTitle').textContent = 'تعديل المستخدم';
+    document.getElementById('userModalTitle').textContent = 'تعديل الموظف';
     document.getElementById('userId').value = user.id;
     document.getElementById('userUsername').value = user.username;
     document.getElementById('userUsername').disabled = true; // تعطيل تعديل اسم المستخدم
@@ -216,7 +216,7 @@ async function saveUser() {
                     await adminAPI.updateUserName(response.userId, name);
                 }
                 
-                alert('تم إضافة المستخدم بنجاح!');
+                alert('تم إضافة الموظف بنجاح!');
                 await loadUsers();
                 closeUserModal();
             }
@@ -261,13 +261,13 @@ async function saveUser() {
             }
 
             if (updateSuccess) {
-                alert('تم تحديث المستخدم بنجاح!' + (newPassword ? ' (تم تغيير كلمة المرور)' : ''));
+                alert('تم تحديث الموظف بنجاح!' + (newPassword ? ' (تم تغيير كلمة المرور)' : ''));
                 await loadUsers();
                 closeUserModal();
             }
         }
     } catch (error) {
-        console.error('خطأ في حفظ المستخدم:', error);
+        console.error('خطأ في حفظ الموظف:', error);
         alert(error.message || 'حدث خطأ في حفظ البيانات');
     }
 }
@@ -281,7 +281,7 @@ async function deleteUser(id) {
         return;
     }
 
-    if (!confirm('هل أنت متأكد من حذف هذا المستخدم؟ سيتم حذف جميع مهامه أيضاً.')) {
+    if (!confirm('هل أنت متأكد من حذف هذا الموظف سيتم حذف جميع مهامه أيضاً.')) {
         return;
     }
 
@@ -289,12 +289,12 @@ async function deleteUser(id) {
         const response = await adminAPI.deleteUser(id);
 
         if (response.success) {
-            alert('تم حذف المستخدم بنجاح!');
+            alert('تم حذف الموظف بنجاح!');
             await loadUsers();
         }
     } catch (error) {
-        console.error('خطأ في حذف المستخدم:', error);
-        alert(error.message || 'حدث خطأ في حذف المستخدم');
+        console.error('خطأ في حذف الموظف:', error);
+        alert(error.message || 'حدث خطأ في حذف الموظف');
     }
 }
 
