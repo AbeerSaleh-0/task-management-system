@@ -11,13 +11,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector('.top-bar-left h1').textContent = `مرحباً، ${authAPI.getUserName()}`;
   //document.querySelector('.top-bar-left h1').textContent = `مرحباً، ${user.name || user.username}`;
   // تحميل المهام
-  await loadMyTasks();
+  await loadMyTasks(false);
+  startAutoRefresh();
+});
+// إيقاف التحديث عند الخروج
+window.addEventListener('beforeunload', () => {
+  stopAutoRefresh();
 });
 
 // متغيرات عامة
 let myTasks = [];
+let autoRefreshInterval;
+let lastTaskCount = 0;
 
 // تحميل مهام المستخدم
+/*
 async function loadMyTasks() {
   try {
     const response = await taskAPI.getMyTasks();
@@ -33,6 +41,157 @@ async function loadMyTasks() {
     console.error('خطأ في تحميل المهام:', error);
     alert('حدث خطأ في تحميل المهام');
   }
+}*/
+
+async function loadMyTasks(isAutoRefresh = false) {
+  try {
+    const response = await taskAPI.getMyTasks();
+    const newTasks = response.tasks || [];
+
+    if (isAutoRefresh) {
+      // فحص إذا في مهام جديدة
+      if (newTasks.length > myTasks.length) {
+        // إيجاد المهام الجديدة فقط
+        const existingTaskIds = myTasks.map(t => t.id);
+        const newlyAddedTasks = newTasks.filter(t => !existingTaskIds.includes(t.id));
+        
+        // إضافة المهام الجديدة للقائمة
+        myTasks = [...myTasks, ...newlyAddedTasks];
+        
+        // رسم المهام الجديدة فقط
+        renderNewTasks(newlyAddedTasks);
+        
+        // تحديث الإحصائيات
+        updateOverview();
+        
+        // إشعار المستخدم
+        if (newlyAddedTasks.length > 0) {
+          showNotification(`تم إضافة ${newlyAddedTasks.length} مهمة جديدة`);
+        }
+      } else if (newTasks.length < myTasks.length) {
+        // لو في مهام محذوفة، نحدث كل شيء
+        myTasks = newTasks;
+        updateOverview();
+        renderTasks();
+      }
+    } else {
+      // التحميل الأول
+      myTasks = newTasks;
+      updateOverview();
+      renderTasks();
+    }
+    
+    lastTaskCount = myTasks.length;
+
+  } catch (error) {
+    console.error('خطأ في تحميل المهام:', error);
+    if (!isAutoRefresh) {
+      alert('حدث خطأ في تحميل المهام');
+    }
+  }
+}
+
+function renderNewTasks(newTasks) {
+  const tasksList = document.getElementById('tasksList');
+  
+  // إزالة رسالة "لا توجد مهام" إذا كانت موجودة
+  const emptyMessage = tasksList.querySelector('p');
+  if (emptyMessage) {
+    emptyMessage.remove();
+  }
+  
+  newTasks.forEach(task => {
+    const completedSubtasks = task.subtasks ? task.subtasks.filter(st => st.status === 'completed').length : 0;
+    const totalSubtasks = task.subtasks ? task.subtasks.length : 0;
+    
+    const taskHTML = `
+      <div class="task-item new-task" id="task-${task.id}">
+        <div class="task-content">
+          <div class="task-details" style="width: 100%;">
+            <div class="task-header">
+              <h3 class="task-title ${task.status === 'completed' ? 'completed' : ''}">${task.title}</h3>
+              ${getStatusBadge(task.status)}
+            </div>
+            <div class="task-meta">
+              <span>
+                <svg class="icon" style="display: inline-block; vertical-align: middle; margin-left: 0.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                ${formatDate(task.due_date)}
+              </span>
+              ${getPriorityBadge(task.priority)}
+            </div>
+            
+            ${task.description ? `
+              <div class="task-notes">
+                <strong>الوصف:</strong> ${task.description}
+              </div>
+            ` : ''}
+
+            ${task.manager_notes ? `
+              <div class="task-notes" style="background: #fef3c7; border-right: 3px solid #f59e0b;">
+                <strong>ملاحظات المدير:</strong> ${task.manager_notes}
+              </div>
+            ` : ''}
+
+            ${task.user_notes ? `
+              <div class="task-notes" style="background: #e0f2fe; border-right: 3px solid #0284c7;">
+                <strong>ملاحظاتي:</strong> ${task.user_notes}
+              </div>
+            ` : ''}
+            
+            <button class="subtasks-toggle" onclick="toggleNotesForm(${task.id})" style="background: #2563eb; color: white; margin-top: 10px;">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+              </svg>
+              ${task.user_notes ? 'تعديل ملاحظاتي' : 'إضافة ملاحظات'}
+            </button>
+             
+            <div class="subtasks" id="notes-form-${task.id}" style="padding: 15px;">
+              <textarea 
+                id="notes-input-${task.id}" 
+                placeholder="أضف ملاحظاتك هنا..."
+                style="width: 100%; min-height: 100px; padding: 10px; border: 2px solid #ddd; border-radius: 8px; font-family: inherit; resize: vertical;"
+              >${task.user_notes || ''}</textarea>
+              <button 
+                onclick="saveNotes(${task.id})"
+                style="background: #16a34a; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; margin-top: 10px; font-weight: 600;"
+              >حفظ الملاحظات</button>
+            </div>
+
+            ${totalSubtasks > 0 ? `
+              <button class="subtasks-toggle" onclick="toggleSubtasks(${task.id})" style="margin-top: 10px;">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+                المهام الفرعية (${completedSubtasks}/${totalSubtasks})
+              </button>
+              <div class="subtasks" id="subtasks-${task.id}">
+                ${task.subtasks.map(subtask => `
+                  <div class="subtask-item" style="padding: 8px 0;">
+                    <span style="display: inline-block; width: 20px; height: 20px; border-radius: 4px; background: ${subtask.status === 'completed' ? '#10b981' : '#e5e7eb'}; margin-left: 10px; position: relative; vertical-align: middle;">
+                      ${subtask.status === 'completed' ? '<svg style="width: 14px; height: 14px; position: absolute; top: 3px; left: 3px;" fill="white" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>' : ''}
+                    </span>
+                    <span class="subtask-name ${subtask.status === 'completed' ? 'completed' : ''}">${subtask.title}</span>
+                  </div>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // إضافة المهمة في بداية القائمة
+    tasksList.insertAdjacentHTML('afterbegin', taskHTML);
+  });
+  
+  // إضافة تأثير بصري للمهام الجديدة
+  setTimeout(() => {
+    document.querySelectorAll('.new-task').forEach(el => {
+      el.classList.remove('new-task');
+    });
+  }, 3000);
 }
 
 // تحديث الإحصائيات
@@ -43,9 +202,9 @@ function updateOverview() {
   //const todayTasks = myTasks.filter(t => moment(t.due_date) === moment(today)).length;
   //const todays = moment().startOf('day'); // اليوم بداية اليوم (00:00:00)
   const todayTasks = myTasks.filter(t => {
-  const taskDate = moment(t.due_date).startOf('day');
-  return taskDate.isSame(today, 'day'); // مقارنة اليوم فقط
-}).length;
+    const taskDate = moment(t.due_date).startOf('day');
+    return taskDate.isSame(today, 'day'); // مقارنة اليوم فقط
+  }).length;
   // المهام المتأخرة (الموعد النهائي قبل اليوم وليست مكتملة)
   const overdueTasks = myTasks.filter(t => {
     return t.due_date < today && t.status !== 'completed';
@@ -139,13 +298,10 @@ function renderTasks() {
               </button>
               <div class="subtasks" id="subtasks-${task.id}">
                 ${task.subtasks.map(subtask => `
-                  <div class="subtask-item">
-                    <input 
-                      type="checkbox" 
-                      class="subtask-checkbox" 
-                      ${subtask.status === 'completed' ? 'checked' : ''}
-                      onchange="toggleSubtaskStatus(${task.id}, ${subtask.id}, this.checked)"
-                    >
+                  <div class="subtask-item" style="padding: 8px 0;">
+                    <span style="display: inline-block; width: 20px; height: 20px; border-radius: 4px; background: ${subtask.status === 'completed' ? '#10b981' : '#e5e7eb'}; margin-left: 10px; position: relative; vertical-align: middle;">
+                      ${subtask.status === 'completed' ? '<svg style="width: 14px; height: 14px; position: absolute; top: 3px; left: 3px;" fill="white" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>' : ''}
+                    </span>
                     <span class="subtask-name ${subtask.status === 'completed' ? 'completed' : ''}">${subtask.title}</span>
                   </div>
                 `).join('')}
@@ -167,11 +323,12 @@ function toggleSubtasks(taskId) {
 }
 
 // تغيير حالة المهمة الفرعية
+/*
 async function toggleSubtaskStatus(taskId, subtaskId, isCompleted) {
   try {
     const newStatus = isCompleted ? 'completed' : 'pending';
     await taskAPI.updateSubtaskStatus(taskId, subtaskId, newStatus);
-    
+
     // تحديث البيانات المحلية
     const task = myTasks.find(t => t.id === taskId);
     if (task && task.subtasks) {
@@ -179,11 +336,11 @@ async function toggleSubtaskStatus(taskId, subtaskId, isCompleted) {
       if (subtask) {
         subtask.status = newStatus;
       }
-      
+
       // ✨ تحقق إذا كل المهام الفرعية مكتملة
       const allCompleted = task.subtasks.every(st => st.status === 'completed');
       const hasSubtasks = task.subtasks.length > 0;
-      
+
       if (allCompleted && hasSubtasks && task.status !== 'completed') {
         // أكمل المهمة الأساسية تلقائياً
         await taskAPI.updateStatus(taskId, 'completed');
@@ -194,19 +351,34 @@ async function toggleSubtaskStatus(taskId, subtaskId, isCompleted) {
         task.status = 'in_progress';
       }
     }
-    
+
     // إعادة رسم المهام
     updateOverview();
     renderTasks();
-    
+
   } catch (error) {
     console.error('خطأ في تحديث المهمة الفرعية:', error);
     alert('حدث خطأ في تحديث المهمة الفرعية');
-    
+
     // إعادة تحميل المهام
     await loadMyTasks();
   }
+}*/
+
+// بدء التحديث التلقائي
+function startAutoRefresh() {
+  autoRefreshInterval = setInterval(async () => {
+    await loadMyTasks(true); // true = تحديث تلقائي
+  }, 10000); // كل 10 ثواني
 }
+
+// إيقاف التحديث التلقائي
+function stopAutoRefresh() {
+  if (autoRefreshInterval) {
+    clearInterval(autoRefreshInterval);
+  }
+}
+
 
 // تسجيل الخروج
 function logout() {
