@@ -54,7 +54,7 @@ const User = {
 
   // جلب جميع المستخدمين
   findAll: async () => {
-    const query = 'SELECT id, username, name, role, created_at FROM users';
+    const query = 'SELECT id, username, name, role, phone, created_at FROM users';
     const [rows] = await db.execute(query);
     return rows;
   },
