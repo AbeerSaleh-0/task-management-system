@@ -1,6 +1,7 @@
 const Task = require('../models/task');
 const Subtask = require('../models/subtask');
 const User = require('../models/user');
+const { sendTaskNotification } = require('./assets/js/whatsapp_api');
 
 // إنشاء مهمة جديدة
 const createTask = async (req, res, next) => {
@@ -26,6 +27,30 @@ const createTask = async (req, res, next) => {
       due_date || null,
       manager_notes || null
     );
+
+        if (user.phone) {
+      const taskData = {
+        title,
+        description: description || 'لا توجد تفاصيل',
+        due_date: due_date || 'غير محدد',
+        priority: priority || 'متوسطة'
+      };
+
+      // إرسال الإشعار بدون انتظار (async - لا نوقف العملية)
+      sendTaskNotification(user.phone, taskData)
+        .then(result => {
+          if (result.success) {
+            console.log(`✅ تم إرسال إشعار واتساب للمستخدم: ${user.username}`);
+          } else {
+            console.log(`⚠️ فشل إرسال الواتساب: ${result.error}`);
+          }
+        })
+        .catch(err => {
+          console.error('❌ خطأ في إرسال إشعار الواتساب:', err);
+        });
+    } else {
+      console.log(`ℹ️ المستخدم ${user.username} ليس لديه رقم جوال`);
+    }
 
     res.status(201).json({
       success: true,
