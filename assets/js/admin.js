@@ -609,7 +609,7 @@ function getRoleText(role) {
   const roles = {
     'admin': 'مدير النظام',
     'manager': 'مدير',
-    'user': 'مستخدم'
+    'user': 'موظف'
   };
   return roles[role] || role;
 }
