@@ -99,9 +99,9 @@ function renderUsers() {
                             <p style="font-size: 0.75rem; color: #6b7280;">@${user.username}</p>
                         </div>
                     </div>
-                </td>
-                <td>${phone}</td>  
+                </td>  
                 <td><span class="role-badge role-${user.role}">${getRoleText(user.role)}</span></td>
+                <td>${phone}</td>
                 <td>${joinDate}</td>
                 <td>
                     <div class="action-buttons">
