@@ -1,7 +1,7 @@
 const Task = require('../models/task');
 const Subtask = require('../models/subtask');
 const User = require('../models/user');
-const { sendTaskNotification } = require('../../assets/js/whatsapp_api');
+const { sendTaskNotification } = require('../whatsapp_api');
 
 // إنشاء مهمة جديدة
 const createTask = async (req, res, next) => {
