@@ -57,7 +57,8 @@ async function sendTaskNotification(phone, taskData) {
 📅 تاريخ التسليم: ${taskData.due_date}
 ⚠️ الأولوية: ${taskData.priority || 'متوسطة'}
 
-✅ يرجى تسجيل الدخول للنظام لعرض المهمة كاملة`;
+✅ يرجى تسجيل الدخول للنظام لعرض المهمة كاملة
+https://tasks-stest.netlify.app/index.html`;
 
   return await sendWhatsAppMessage(phone, message);
 }
