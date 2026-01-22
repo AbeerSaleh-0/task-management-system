@@ -28,11 +28,6 @@ createUsersTable();
 // دوال للتعامل مع جدول Users
 const User = {
   // إنشاء مستخدم جديد
-/*  create: async (username, password, role = 'user', name = null) => {
-    const query = 'INSERT INTO users (username, name, password, role) VALUES (?, ?, ?, ?)';
-    const [result] = await db.execute(query, [username, name, password, role]);
-    return result;
-},*/
     create: async (username, password, role = 'user', name = null, phone = null) => {
     const query = 'INSERT INTO users (username, name, phone, password, role) VALUES (?, ?, ?, ?, ?)';
     const [result] = await db.execute(query, [username, name, phone, password, role]);

@@ -4,7 +4,6 @@ const User = require('../models/user');
 // إنشاء مستخدم جديد 
 const createUser = async (req, res, next) => {
   try {
-    //const { username, name, password, role} = req.body; 
     const { username, password, role, name, phone } = req.body;
     // التحقق من عدم وجود المستخدم
     const existingUser = await User.findByUsername(username);

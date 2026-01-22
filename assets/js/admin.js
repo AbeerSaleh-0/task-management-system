@@ -63,16 +63,7 @@ function updateOverview() {
   const completed = allTasks.filter(t => t.status === 'completed').length;
   const inProgress = allTasks.filter(t => t.status === 'in_progress').length;
   // حساب المهام المتأخرة
-  /*
- const overdueTasks = allTasks.filter(t => {
-   if (t.status === 'completed') return false;
-   const dueDate = moment(t.due_date).format('YYYY-MM-DD');
-   console.log(dueDate);
-   const today = new Date();
-   console.log(today);
-   return dueDate < today; 
- }).length;
- console.log(overdueTasks.length);*/
+
   const overdueTasks = allTasks.filter(t => {
     if (t.status === 'completed') return false;
 
@@ -670,69 +661,7 @@ function showSection(section) {
   }
 }
 
-// Toggle Sidebar
-/*
-function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  sidebar.classList.toggle('hidden');
-}
 
-function closeSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  sidebar.classList.add('hidden');
-}*/
-/*
-// Toggle Sidebar
-function toggleSidebar(event) {
-  event.stopPropagation();
-  const sidebar = document.getElementById('sidebar');
-  sidebar.classList.toggle('hidden');
-}
-
-function closeSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  sidebar.classList.add('hidden');
-}
-
-// إغلاق السايدبار عند الضغط في أي مكان
-document.addEventListener('click', function(event) {
-  const sidebar = document.getElementById('sidebar');
-  const menuBtn = document.querySelector('.menu-btn');
-  
-  // تأكد إن الضغط مو على السايدبار أو الزر
-  if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
-    closeSidebar();
-  }
-});*/
-/*
-// Toggle Sidebar
-function toggleSidebar(event) {
-  event.stopPropagation(); // يمنع الإغلاق التلقائي
-  const sidebar = document.getElementById('sidebar');
-  sidebar.classList.toggle('hidden');
-}
-
-function closeSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  sidebar.classList.add('hidden');
-}
-
-// إغلاق السايدبار عند الضغط في أي مكان
-document.addEventListener('click', function(event) {
-  const sidebar = document.getElementById('sidebar');
-  
-  // إذا السايدبار مو مخفي وما ضغطت عليه، أقفله
-  if (!sidebar.classList.contains('hidden') && !sidebar.contains(event.target)) {
-    closeSidebar();
-  }
-});
-
-// منع إغلاق السايدبار لما تضغط داخله
-document.getElementById('sidebar').addEventListener('click', function(event) {
-  event.stopPropagation();
-});*/
-
-// Toggle Sidebar
 // Toggle Sidebar
 function toggleSidebar(event) {
   event.stopPropagation();
@@ -779,45 +708,6 @@ sidebar.addEventListener('click', function (event) {
 sidebar.addEventListener('touchstart', function (event) {
   event.stopPropagation();
 });
-/*
-function toggleSidebar(event) {
-  event.stopPropagation();
-  event.preventDefault(); // للجوال
-  const sidebar = document.getElementById('sidebar');
-  sidebar.classList.toggle('hidden');
-}
-
-function closeSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  sidebar.classList.add('hidden');
-}
-
-// دالة للإغلاق تشتغل على الكمبيوتر والجوال
-function handleClickOutside(event) {
-  const sidebar = document.getElementById('sidebar');
-  const menuBtn = document.querySelector('.menu-btn');
-
-  // تأكد السايدبار مو مخفي
-  if (!sidebar.classList.contains('hidden')) {
-    // إذا الضغط مو على السايدبار أو الزر
-    if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
-      closeSidebar();
-    }
-  }
-}
-
-// إضافة الأحداث للكمبيوتر والجوال
-document.addEventListener('click', handleClickOutside);
-document.addEventListener('touchstart', handleClickOutside);
-
-// منع الإغلاق لما تضغط داخل السايدبار
-const sidebar = document.getElementById('sidebar');
-sidebar.addEventListener('click', function (event) {
-  event.stopPropagation();
-});
-sidebar.addEventListener('touchstart', function (event) {
-  event.stopPropagation();
-});*/
 
 // ملء select المستخدمين
 function populateUserFilter() {
@@ -1101,44 +991,6 @@ function closeEditTaskModal() {
 }
 
 // حفظ التعديلات
-/*
-async function saveEditedTask() {
-  const taskId = document.getElementById('editTaskId').value;
-  const title = document.getElementById('editTaskTitle').value.trim();
-  const description = document.getElementById('editTaskDescription').value.trim();
-  const status = document.getElementById('editTaskStatus').value;
-  const priority = document.getElementById('editTaskPriority').value;
-  const due_date = document.getElementById('editTaskDueDate').value;
-  const user_id = document.getElementById('editTaskUser').value;
-  const manager_notes = document.getElementById('editTaskManagerNotes').value.trim();
-
-  if (!title || !user_id) {
-    alert('يرجى ملء الحقول المطلوبة');
-    return;
-  }
-
-  try {
-    // تحديث المهمة
-    await taskAPI.update(taskId, {
-      title,
-      description: description.length > 0 ? description : null,
-      status,
-      priority,
-      user_id: parseInt(user_id),
-      due_date,
-      manager_notes: manager_notes.length > 0 ? manager_notes : null
-    });
-
-    alert('تم تحديث المهمة بنجاح!');
-    closeEditTaskModal();
-    await loadDashboardData();
-
-  } catch (error) {
-    console.error('خطأ في تحديث المهمة:', error);
-    alert('حدث خطأ في تحديث المهمة');
-  }
-}*/
-
 async function saveEditedTask() {
   const taskId = document.getElementById('editTaskId').value;
   const title = document.getElementById('editTaskTitle').value.trim();

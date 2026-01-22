@@ -25,24 +25,6 @@ let autoRefreshInterval;
 let lastTaskCount = 0;
 
 // تحميل مهام المستخدم
-/*
-async function loadMyTasks() {
-  try {
-    const response = await taskAPI.getMyTasks();
-    myTasks = response.tasks || [];
-
-    // تحديث نظرة عامة
-    updateOverview();
-
-    // رسم المهام
-    renderTasks();
-
-  } catch (error) {
-    console.error('خطأ في تحميل المهام:', error);
-    alert('حدث خطأ في تحميل المهام');
-  }
-}*/
-
 async function loadMyTasks(isAutoRefresh = false) {
   try {
     const response = await taskAPI.getMyTasks();
@@ -366,10 +348,6 @@ function renderNewTasks(newTasks) {
 // تحديث الإحصائيات
 function updateOverview() {
   const today = new Date().toISOString().split('T')[0];
-
-  // المهام اليوم
-  //const todayTasks = myTasks.filter(t => moment(t.due_date) === moment(today)).length;
-  //const todays = moment().startOf('day'); // اليوم بداية اليوم (00:00:00)
   const todayTasks = myTasks.filter(t => {
     const taskDate = moment(t.due_date).startOf('day');
     return taskDate.isSame(today, 'day'); // مقارنة اليوم فقط
@@ -491,49 +469,6 @@ function toggleSubtasks(taskId) {
   }
 }
 
-// تغيير حالة المهمة الفرعية
-/*
-async function toggleSubtaskStatus(taskId, subtaskId, isCompleted) {
-  try {
-    const newStatus = isCompleted ? 'completed' : 'pending';
-    await taskAPI.updateSubtaskStatus(taskId, subtaskId, newStatus);
-
-    // تحديث البيانات المحلية
-    const task = myTasks.find(t => t.id === taskId);
-    if (task && task.subtasks) {
-      const subtask = task.subtasks.find(st => st.id === subtaskId);
-      if (subtask) {
-        subtask.status = newStatus;
-      }
-
-      // ✨ تحقق إذا كل المهام الفرعية مكتملة
-      const allCompleted = task.subtasks.every(st => st.status === 'completed');
-      const hasSubtasks = task.subtasks.length > 0;
-
-      if (allCompleted && hasSubtasks && task.status !== 'completed') {
-        // أكمل المهمة الأساسية تلقائياً
-        await taskAPI.updateStatus(taskId, 'completed');
-        task.status = 'completed';
-      } else if (!allCompleted && task.status === 'completed') {
-        // غيّر المهمة لـ in_progress
-        await taskAPI.updateStatus(taskId, 'in_progress');
-        task.status = 'in_progress';
-      }
-    }
-
-    // إعادة رسم المهام
-    updateOverview();
-    renderTasks();
-
-  } catch (error) {
-    console.error('خطأ في تحديث المهمة الفرعية:', error);
-    alert('حدث خطأ في تحديث المهمة الفرعية');
-
-    // إعادة تحميل المهام
-    await loadMyTasks();
-  }
-}*/
-
 // بدء التحديث التلقائي
 function startAutoRefresh() {
   autoRefreshInterval = setInterval(async () => {
@@ -555,11 +490,6 @@ function logout() {
     authAPI.logout();
   }
 }
-
-// Toggle Sidebar
-/*function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('hidden');
-}*/
 
 // دوال مساعدة
 function getStatusBadge(status) {

@@ -56,11 +56,8 @@ function updateStats() {
 // فلترة المستخدمين
 function filterUsers() {
     const roleFilter = document.getElementById('roleFilter').value;
-    //const statusFilter = document.getElementById('statusFilter').value;
-
     filteredUsers = users.filter(user => {
         const matchRole = !roleFilter || user.role === roleFilter;
-       // const matchStatus = !statusFilter || user.status === statusFilter;
         return matchRole;
     });
 
@@ -163,7 +160,6 @@ function editUser(id) {
     document.getElementById('userName').value = user.name || '';
     document.getElementById('userPhone').value = user.phone || '';
     document.getElementById('userRole').value = user.role;
-    //document.getElementById('userStatus').value = user.status || 'active';
     
     // إخفاء حقول الإضافة وعرض حقول التعديل
     document.getElementById('passwordFields').style.display = 'none';
@@ -183,7 +179,6 @@ async function saveUser() {
     const name = document.getElementById('userName').value.trim();
     const phone = document.getElementById('userPhone').value.trim();
     const role = document.getElementById('userRole').value;
-    //const status = document.getElementById('userStatus').value;
 
     if (phone && !/^(05|5)\d{8}$/.test(phone)) {
         alert('رقم الجوال غير صحيح. يجب أن يبدأ بـ 05 ويتكون من 10 أرقام');

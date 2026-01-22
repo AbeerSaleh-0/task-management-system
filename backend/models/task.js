@@ -102,7 +102,6 @@ const Task = {
   },
 
   // تحديث المهمة كاملة
-  // تحديث المهمة كاملة
   update: async (id, title, description, status, priority, due_date, user_id, manager_notes) => {
     const query = `
     UPDATE tasks 
@@ -127,12 +126,6 @@ const Task = {
     ]);
     return result;
   },
-  /*
-  update: async (id, title, description, status, priority, due_date) => {
-    const query = 'UPDATE tasks SET title = ?, description = ?, status = ?, priority = ?, due_date = ? WHERE id = ?';
-    const [result] = await db.execute(query, [title, description, status, priority, due_date, id]);
-    return result;
-  },*/
 
   // حذف مهمة
   delete: async (id) => {
