@@ -7,7 +7,7 @@ app.use(cors({
   origin: [
     'https://tasks-stest.netlify.app', // URL
     'http://localhost:3000', // للتطوير المحلي
-    'http://127.0.0.1:5500'  // إذا تستخدمين Live Server
+    'http://127.0.0.1:5500'  // Live Server
   ],
   credentials: true
 }));
