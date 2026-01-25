@@ -162,12 +162,13 @@ async function sendWhatsAppMessage(phoneNumber, message) {
   }
 }
 */
+/*
 async function sendTaskNotification(phoneNumber, taskData) {
   try {
     const formattedPhone = formatPhoneNumber(phoneNumber);
     const url = `https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`;
 
-    /*const body = {
+    const body = {
       messaging_product: 'whatsapp',
       to: formattedPhone,
       type: 'template',
@@ -199,16 +200,8 @@ async function sendTaskNotification(phoneNumber, taskData) {
           }
         ]
       }
-    };*/
-    const body = {
-  messaging_product: 'whatsapp',
-  to: formattedPhone,
-  type: 'template',
-  template: {
-    name: 'hello_world',
-    language: { code: 'en_US' }
-  }
-};
+    };
+
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -233,7 +226,78 @@ async function sendTaskNotification(phoneNumber, taskData) {
     return { success: false, error: error.message };
   }
 }
+*/
+async function sendTaskNotification(phoneNumber, taskData) {
+  try {
+    const formattedPhone = formatPhoneNumber(phoneNumber);
+    const url = `https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`;
 
+    const body = {
+      messaging_product: 'whatsapp',
+      to: formattedPhone,
+      type: 'template',
+      template: {
+        name: 'whats_notification',
+        language: {
+          code: 'ar'
+        },
+        components: [
+          {
+            type: 'body',
+            parameters: [
+              {
+                type: 'text',
+                parameter_name: 'task_title',
+                text: taskData.title || 'عنوان المهمة'
+              },
+              {
+                type: 'text',
+                parameter_name: 'task_description',
+                text: taskData.description || 'وصف المهمة'
+              },
+              {
+                type: 'text',
+                parameter_name: 'task_date',
+                text: taskData.due_date || 'التاريخ'
+              }
+            ]
+          }
+        ]
+      }
+    };
+
+    console.log('📤 إرسال:', JSON.stringify(body, null, 2));
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${ACCESS_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+
+    const data = await response.json();
+    console.log('📥 الرد من Meta:', JSON.stringify(data, null, 2));
+
+    if (data.error) {
+      console.error('❌ خطأ:', data.error);
+      return { success: false, error: data.error };
+    }
+
+    // ✅ تحقق من الرد
+    if (data.messages && data.messages[0]) {
+      console.log('✅ Message ID:', data.messages[0].id);
+      return { success: true, messageId: data.messages[0].id };
+    }
+
+    return { success: false, error: 'No message sent' };
+
+  } catch (error) {
+    console.error('❌ Exception:', error);
+    return { success: false, error: error.message };
+  }
+}
 module.exports = {
  // sendWhatsAppMessage,
   sendTaskNotification
