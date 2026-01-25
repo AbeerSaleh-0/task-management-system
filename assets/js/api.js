@@ -86,7 +86,7 @@ const authAPI = {
   // تسجيل دخول
   login: async (username, password) => {
     try {
-      const data = await apiCall('/auth/login', 'POST', { username, password }, false);
+      const data = await apiCall('api/auth/login', 'POST', { username, password }, false);
       
       if (data.success) {
         saveToken(data.token);
