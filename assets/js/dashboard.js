@@ -371,7 +371,7 @@ function updateOverview() {
 // رسم المهام
 function renderTasks() {
   const tasksList = document.getElementById('tasksList');
-
+/*
   if (myTasks.length === 0) {
     tasksList.innerHTML = '<p style="text-align: center; color: #9ca3af; padding: 3rem;">لا توجد مهام مخصصة لك</p>';
     return;
@@ -380,7 +380,19 @@ function renderTasks() {
   tasksList.innerHTML = myTasks.map(task => {
     const completedSubtasks = task.subtasks ? task.subtasks.filter(st => st.status === 'completed').length : 0;
     const totalSubtasks = task.subtasks ? task.subtasks.length : 0;
+*/
+   // تصفية المهام غير المكتملة فقط
+   const activeTasks = myTasks.filter(task => task.status !== 'completed');
+  
+   if (activeTasks.length === 0) {
+     tasksList.innerHTML = '<p style="text-align: center; color: #9ca3af; padding: 3rem;">لا توجد مهام نشطة</p>';
+     return;
+   }
 
+  tasksList.innerHTML = activeTasks.map(task => {
+    const completedSubtasks = task.subtasks ? task.subtasks.filter(st => st.status === 'completed').length : 0;
+    const totalSubtasks = task.subtasks ? task.subtasks.length : 0;
+    
     return `
       <div class="task-item" id="task-${task.id}">
         <div class="task-content">

@@ -73,9 +73,6 @@ function updateOverview() {
     return dueDate.isBefore(today);
   }).length;
 
-  console.log(overdueTasks);
-  // const activeUsers = allUsers.length;
-
   document.getElementById('totalTasks').textContent = total;
   document.getElementById('completedTasks').textContent = completed;
   document.getElementById('inProgressTasks').textContent = inProgress;
