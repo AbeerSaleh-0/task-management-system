@@ -1,8 +1,8 @@
 require('dotenv').config();
 require('./config/db');
 const express = require('express');
-const app = express();
 const cors = require('cors');
+const app = express();
 app.use(cors({
   origin: [
     'https://taskrsg.cloud/', // URL
