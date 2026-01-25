@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express();
 app.use(cors({
   origin: [
-    'https://taskrsg.cloud/', // URL
+    'https://taskrsg.cloud', // URL
     'http://localhost:3000', // للتطوير المحلي
     'http://127.0.0.1:5500'  // Live Server
   ],
