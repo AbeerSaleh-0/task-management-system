@@ -122,7 +122,7 @@ module.exports = {
 *تاريخ التسليم:* {{task_date}}
 *يرجى تسجيل الدخول للنظام لعرض المهمة كاملة*
 */
-
+/*
 async function sendWhatsAppMessage(phoneNumber, message) {
   try {
     const formattedPhone = formatPhoneNumber(phoneNumber);
@@ -161,7 +161,7 @@ async function sendWhatsAppMessage(phoneNumber, message) {
     return { success: false, error: error.message };
   }
 }
-
+*/
 async function sendTaskNotification(phoneNumber, taskData) {
   try {
     const formattedPhone = formatPhoneNumber(phoneNumber);
@@ -227,6 +227,6 @@ async function sendTaskNotification(phoneNumber, taskData) {
 }
 
 module.exports = {
-  sendWhatsAppMessage,
+ // sendWhatsAppMessage,
   sendTaskNotification
 };

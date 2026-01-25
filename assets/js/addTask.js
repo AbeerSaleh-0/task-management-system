@@ -42,7 +42,7 @@ async function loadUsers() {
     allUsers.forEach(user => {
       const option = document.createElement('option');
       option.value = user.id;
-      // ✅ عرض الاسم إذا موجود، وإلا اسم المستخدم
+      //  عرض الاسم إذا موجود، وإلا اسم المستخدم
       option.textContent = user.name || user.username;
       select.appendChild(option);
     });
@@ -126,7 +126,7 @@ function convertStatusToAPI(status) {
     'not-started': 'pending',
     'in-progress': 'in_progress',
     'done': 'completed',
-    'overdue': 'pending' // أو يمكن معالجتها بطريقة أخرى
+    'overdue': 'pending' 
   };
   return statusMap[status] || 'pending';
 }
