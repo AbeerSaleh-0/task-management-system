@@ -167,7 +167,7 @@ async function sendTaskNotification(phoneNumber, taskData) {
     const formattedPhone = formatPhoneNumber(phoneNumber);
     const url = `https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`;
 
-    const body = {
+    /*const body = {
       messaging_product: 'whatsapp',
       to: formattedPhone,
       type: 'template',
@@ -199,8 +199,16 @@ async function sendTaskNotification(phoneNumber, taskData) {
           }
         ]
       }
-    };
-
+    };*/
+    const body = {
+  messaging_product: 'whatsapp',
+  to: formattedPhone,
+  type: 'template',
+  template: {
+    name: 'hello_world',
+    language: { code: 'en_US' }
+  }
+};
     const response = await fetch(url, {
       method: 'POST',
       headers: {
