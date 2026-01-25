@@ -177,7 +177,7 @@ async function loadUsersTable() {
       </td>
       <td id="user-tasks-${user.id}">جاري التحميل...</td>
     `;
-
+ 
     tbody.appendChild(row);
 
     // جلب عدد المهام غير المكتملة فقط
@@ -246,12 +246,12 @@ function renderTasks() {
 async function openUserDetailsModal(user) {
   const displayName = user.name || user.username;
 
-  document.getElementById('userModalTitle').textContent = `تفاصيل: ${displayName}`;
-  document.getElementById('userModalName').textContent = displayName;
-  document.getElementById('userModalTitle').textContent = `تفاصيل: ${user.username}`;
-  document.getElementById('userModalName').textContent = user.username;
+  document.getElementById('userModalTitle').textContent = `تفاصيل: ${user.name}`;
+  document.getElementById('userModalName').textContent = user.name;
+  document.getElementById('userModalTitle').textContent = `تفاصيل: ${user.name}`;
+  document.getElementById('userModalName').textContent = user.name;
   document.getElementById('userModalRole').textContent = getRoleText(user.role);
-  document.getElementById('userModalAvatar').textContent = user.username.charAt(0).toUpperCase();
+  document.getElementById('userModalAvatar').textContent = user.name.charAt(0).toUpperCase();
 
   try {
     const response = await taskAPI.getByUserId(user.id);
