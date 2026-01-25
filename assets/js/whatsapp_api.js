@@ -1,4 +1,4 @@
-require('dotenv').config();
+/*require('dotenv').config();
 const PHONE_NUMBER_ID = process.env.PHONE_ID;
 const ACCESS_TOKEN = process.env.WA_APP;
 
@@ -12,7 +12,7 @@ function formatPhoneNumber(phoneNumber) {
   }
 
   return formattedPhone;
-}
+}*/
 /*
 async function sendWhatsAppMessage(phoneNumber, message) {
   try {
@@ -227,6 +227,7 @@ async function sendTaskNotification(phoneNumber, taskData) {
   }
 }
 */
+/*
 async function sendTaskNotification(phoneNumber, taskData) {
   try {
     const formattedPhone = formatPhoneNumber(phoneNumber);
@@ -301,4 +302,4 @@ async function sendTaskNotification(phoneNumber, taskData) {
 module.exports = {
  // sendWhatsAppMessage,
   sendTaskNotification
-};
+};*/
