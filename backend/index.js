@@ -9,7 +9,9 @@ app.use(cors({
     'http://localhost:3000', // للتطوير المحلي
     'http://127.0.0.1:5500'  // Live Server
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 // استيراد قاعدة البيانات والـ Models (لإنشاء الجداول)
