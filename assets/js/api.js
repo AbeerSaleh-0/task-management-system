@@ -5,17 +5,45 @@ const API_URL = 'https://api.taskrsg.cloud/api';
 
 // جلب الـ token من localStorage
 function getToken() {
-  return localStorage.getItem('token');
+  const token = localStorage.getItem('token');
+  const expiry = localStorage.getItem('tokenExpiry');
+  
+  if (!token || !expiry) {
+    return null;
+  }
+  
+  const now = new Date().getTime();
+  
+  // إذا انتهت المدة
+  if (now > parseInt(expiry)) {
+    console.log('❌ Token expired locally');
+    removeToken();
+    removeUser();
+    
+    // توجيه للـ Login
+    if (!window.location.pathname.includes('index.html')) {
+      window.location.href = '/index.html';
+    }
+    
+    return null;
+  }
+  
+  return token;
 }
 
 // حفظ الـ token في localStorage
 function saveToken(token) {
+  const now = new Date().getTime();
+  const expiryTime = now + (12 * 60 * 60 * 1000); // 12 ساعة بالـ milliseconds
+  
   localStorage.setItem('token', token);
+  localStorage.setItem('tokenExpiry', expiryTime);
 }
 
 // حذف الـ token من localStorage
 function removeToken() {
   localStorage.removeItem('token');
+  localStorage.removeItem('tokenExpiry');
 }
 
 // حفظ بيانات المستخدم
