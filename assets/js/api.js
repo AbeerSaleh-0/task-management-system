@@ -1,5 +1,5 @@
 // عنوان الـ API
-const API_URL = 'https://api.taskrsg.cloud/';
+const API_URL = 'https://api.taskrsg.cloud';
 
 // ======== دوال مساعدة ========
 
