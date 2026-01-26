@@ -41,7 +41,6 @@ function removeUser() {
 }
 
 // دالة عامة للـ API calls
-/*
 async function apiCall(endpoint, method = 'GET', body = null, requiresAuth = true) {
   const headers = {
     'Content-Type': 'application/json'
@@ -67,61 +66,6 @@ async function apiCall(endpoint, method = 'GET', body = null, requiresAuth = tru
 
   try {
     const response = await fetch(`${API_URL}${endpoint}`, config);
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || 'Something went wrong');
-    }
-
-    return data;
-
-  } catch (error) {
-    console.error('API Error:', error);
-    throw error;
-  }
-}*/
-
-// دالة عامة للـ API calls
-async function apiCall(endpoint, method = 'GET', body = null, requiresAuth = true) {
-  const headers = {
-    'Content-Type': 'application/json'
-  };
-
-  // إضافة الـ token إذا كان مطلوب
-  if (requiresAuth) {
-    const token = getToken();
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-  }
-
-  const config = {
-    method,
-    headers
-  };
-
-  if (body) {
-    config.body = JSON.stringify(body);
-  }
-
-  try {
-    const response = await fetch(`${API_URL}${endpoint}`, config);
-    
-    // ✅ إذا الـ response كان 401 (Unauthorized)
-    if (response.status === 401) {
-      console.log('❌ Token expired or invalid - logging out');
-      
-      // حذف البيانات
-      removeToken();
-      removeUser();
-      
-      // توجيه للـ Login
-      window.location.href = '/index.html';
-      
-      // إيقاف باقي الكود
-      return;
-    }
-
     const data = await response.json();
 
     if (!response.ok) {
