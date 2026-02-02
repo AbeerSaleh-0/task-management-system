@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // تحميل قائمة المستخدمين
+  // تحميل قائمة الموظفين
   await loadUsers();
 
   // تعيين الحد الأدنى للتاريخ (اليوم)
@@ -30,26 +30,26 @@ let subtasks = [];
 let subtaskCounter = 0;
 let allUsers = [];
 
-// تحميل قائمة المستخدمين
+// تحميل قائمة الموظفين
 async function loadUsers() {
   try {
     const response = await adminAPI.getAllUsers();
     allUsers = response.users || [];
 
     const select = document.getElementById('taskUser');
-    select.innerHTML = '<option value="">اختر المستخدم</option>';
+    select.innerHTML = '<option value="">اختر الموظف</option>';
 
     allUsers.forEach(user => {
       const option = document.createElement('option');
       option.value = user.id;
-      // ✅ عرض الاسم إذا موجود، وإلا اسم المستخدم
+      //  عرض الاسم إذا موجود، وإلا اسم المستخدم
       option.textContent = user.name || user.username;
       select.appendChild(option);
     });
 
   } catch (error) {
-    console.error('خطأ في تحميل المستخدمين:', error);
-    alert('حدث خطأ في تحميل قائمة المستخدمين');
+    console.error('خطأ في تحميل الموظفين:', error);
+    alert('حدث خطأ في تحميل قائمة الموظفين');
   }
 }
 
@@ -126,7 +126,7 @@ function convertStatusToAPI(status) {
     'not-started': 'pending',
     'in-progress': 'in_progress',
     'done': 'completed',
-    'overdue': 'pending' // أو يمكن معالجتها بطريقة أخرى
+    'overdue': 'pending' 
   };
   return statusMap[status] || 'pending';
 }
@@ -149,7 +149,7 @@ document.getElementById('taskForm').addEventListener('submit', async function(e)
   }
 
   if (!user_id) {
-    alert('يرجى اختيار المستخدم');
+    alert('يرجى اختيار الموظف');
     return;
   }
 

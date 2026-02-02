@@ -62,12 +62,21 @@ function updateOverview() {
   const total = allTasks.length;
   const completed = allTasks.filter(t => t.status === 'completed').length;
   const inProgress = allTasks.filter(t => t.status === 'in_progress').length;
-  const activeUsers = allUsers.length;
+  // حساب المهام المتأخرة
+
+  const overdueTasks = allTasks.filter(t => {
+    if (t.status === 'completed') return false;
+
+    const dueDate = moment(t.due_date);
+    const today = moment().startOf('day');
+
+    return dueDate.isBefore(today);
+  }).length;
 
   document.getElementById('totalTasks').textContent = total;
   document.getElementById('completedTasks').textContent = completed;
   document.getElementById('inProgressTasks').textContent = inProgress;
-  document.getElementById('activeUsers').textContent = activeUsers;
+  document.getElementById('overdueTasks').textContent = overdueTasks;
 }
 
 function getUserNameById(userId) {
@@ -96,16 +105,16 @@ function renderTodayTasks() {
         <thead>
           <tr>
             <th>اسم المهمة</th>
-            <th>المستخدم</th>
+            <th>الموظف</th>
             <th>الحالة</th>
             <th>الموعد النهائي</th>
             <th>الإجراءات</th>
           </tr>
         </thead>
         <tbody>
-          ${todayTasks.map(task =>{
-            const name = getUserNameById(task.user_id);
-            return `
+          ${todayTasks.map(task => {
+      const name = getUserNameById(task.user_id);
+      return `
             <tr style="background: ${task.status === 'completed' ? '#f0fdf4' : '#fef3c7'};">
               <td>
                 <h4>${task.title}</h4>
@@ -165,7 +174,7 @@ async function loadUsersTable() {
       </td>
       <td id="user-tasks-${user.id}">جاري التحميل...</td>
     `;
-
+ 
     tbody.appendChild(row);
 
     // جلب عدد المهام غير المكتملة فقط
@@ -223,7 +232,7 @@ function renderTasks() {
   });
 
   const countText = selectedUser ?
-    `عرض مهام المستخدم (${filteredTasks.length})` :
+    `عرض مهام الموظف (${filteredTasks.length})` :
     `عرض جميع المهام (${filteredTasks.length})`;
 
   if (document.getElementById('filteredTasksCount')) {
@@ -234,12 +243,12 @@ function renderTasks() {
 async function openUserDetailsModal(user) {
   const displayName = user.name || user.username;
 
-  document.getElementById('userModalTitle').textContent = `تفاصيل: ${displayName}`;
-  document.getElementById('userModalName').textContent = displayName;
-  document.getElementById('userModalTitle').textContent = `تفاصيل: ${user.username}`;
-  document.getElementById('userModalName').textContent = user.username;
+  document.getElementById('userModalTitle').textContent = `تفاصيل: ${user.name}`;
+  document.getElementById('userModalName').textContent = user.name;
+  document.getElementById('userModalTitle').textContent = `تفاصيل: ${user.name}`;
+  document.getElementById('userModalName').textContent = user.name;
   document.getElementById('userModalRole').textContent = getRoleText(user.role);
-  document.getElementById('userModalAvatar').textContent = user.username.charAt(0).toUpperCase();
+  document.getElementById('userModalAvatar').textContent = user.name.charAt(0).toUpperCase();
 
   try {
     const response = await taskAPI.getByUserId(user.id);
@@ -340,8 +349,8 @@ async function openUserDetailsModal(user) {
     document.getElementById('userDetailsModal').style.display = 'flex';
 
   } catch (error) {
-    console.error('خطأ في جلب مهام المستخدم:', error);
-    alert('حدث خطأ في تحميل مهام المستخدم');
+    console.error('خطأ في جلب مهام الموظف:', error);
+    alert('حدث خطأ في تحميل مهام الموظف');
   }
 }
 // إغلاق modal
@@ -502,7 +511,7 @@ async function viewTask(taskId) {
         
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
           <div>
-            <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0.25rem;">المستخدم</p>
+            <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 0.25rem;">الموظف</p>
             <p style="font-weight: 500;">${getUserNameById(task.user_id) || task.username || 'غير معروف'}</p>
           </div>
           <div>
@@ -588,7 +597,7 @@ function getRoleText(role) {
   const roles = {
     'admin': 'مدير النظام',
     'manager': 'مدير',
-    'user': 'مستخدم'
+    'user': 'موظف'
   };
   return roles[role] || role;
 }
@@ -649,11 +658,53 @@ function showSection(section) {
   }
 }
 
+
 // Toggle Sidebar
-function toggleSidebar() {
+function toggleSidebar(event) {
+  event.stopPropagation();
   const sidebar = document.getElementById('sidebar');
+  const body = document.body;
+  
+  sidebar.classList.toggle('show');
   sidebar.classList.toggle('hidden');
+  body.classList.toggle('sidebar-open');
 }
+
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const body = document.body;
+  
+  sidebar.classList.remove('show');
+  sidebar.classList.add('hidden');
+  body.classList.remove('sidebar-open');
+}
+
+// دالة للإغلاق تشتغل على الكمبيوتر والجوال
+function handleClickOutside(event) {
+  const sidebar = document.getElementById('sidebar');
+  const menuBtn = document.querySelector('.menu-btn');
+
+  // تأكد السايدبار مو مخفي
+  if (sidebar.classList.contains('show')) {
+    // إذا الضغط مو على السايدبار أو الزر
+    if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
+      closeSidebar();
+    }
+  }
+}
+
+// إضافة الأحداث للكمبيوتر والجوال
+document.addEventListener('click', handleClickOutside);
+document.addEventListener('touchstart', handleClickOutside);
+
+// منع الإغلاق لما تضغط داخل السايدبار
+const sidebar = document.getElementById('sidebar');
+sidebar.addEventListener('click', function (event) {
+  event.stopPropagation();
+});
+sidebar.addEventListener('touchstart', function (event) {
+  event.stopPropagation();
+});
 
 // ملء select المستخدمين
 function populateUserFilter() {
@@ -661,13 +712,14 @@ function populateUserFilter() {
   if (!select) return;
 
   // مسح الخيارات القديمة (عدا "جميع المستخدمين")
-  select.innerHTML = '<option value="">جميع المستخدمين</option>';
+  select.innerHTML = '<option value="">جميع الموظفين</option>';
 
   // إضافة المستخدمين
   allUsers.forEach(user => {
+    if (user.role === 'admin') return;
     const option = document.createElement('option');
     option.value = user.id;
-    option.textContent = user.username;
+    option.textContent = user.name || user.username;;
     select.appendChild(option);
   });
 }
@@ -896,18 +948,24 @@ async function openEditTaskModal(taskId) {
   try {
     const response = await taskAPI.getById(taskId);
     const task = response.task;
-
+    
     document.getElementById('editTaskId').value = task.id;
     document.getElementById('editTaskTitle').value = task.title;
     document.getElementById('editTaskDescription').value = task.description || '';
     document.getElementById('editTaskStatus').value = task.status;
     document.getElementById('editTaskPriority').value = task.priority;
-    document.getElementById('editTaskDueDate').value = task.due_date;
+    // ✅ استخراج التاريخ مباشرة من الـ string
+if (task.due_date) {
+  const formattedDate = task.due_date.split('T')[0]; // 2026-01-14
+  document.getElementById('editTaskDueDate').value = formattedDate;
+} else {
+  document.getElementById('editTaskDueDate').value = '';
+}
     document.getElementById('editTaskManagerNotes').value = task.manager_notes || '';
 
     // ملء select المستخدمين
     const userSelect = document.getElementById('editTaskUser');
-    userSelect.innerHTML = '<option value="">اختر المستخدم</option>';
+    userSelect.innerHTML = '<option value="">اختر الموظف</option>';
     allUsers.forEach(user => {
       const option = document.createElement('option');
       option.value = user.id;
@@ -945,24 +1003,28 @@ async function saveEditedTask() {
     return;
   }
 
+  const updateData = {
+    title,
+    description: description.length > 0 ? description : null,
+    status,
+    priority,
+    user_id: parseInt(user_id),
+    due_date,
+    manager_notes: manager_notes.length > 0 ? manager_notes : null
+  };
+
+  console.log('📤 Data being sent:', updateData); // ✅ شوف ايش يطلع هنا
+
   try {
-    // تحديث المهمة
-    await taskAPI.update(taskId, {
-      title,
-      description: description || null,
-      status,
-      priority,
-      user_id: parseInt(user_id),
-      due_date,
-      manager_notes: manager_notes || null
-    });
+    const response = await taskAPI.update(taskId, updateData);
+    console.log('📥 Response from server:', response); // ✅ وشوف الرد
 
     alert('تم تحديث المهمة بنجاح!');
     closeEditTaskModal();
     await loadDashboardData();
 
   } catch (error) {
-    console.error('خطأ في تحديث المهمة:', error);
+    console.error('❌ خطأ في تحديث المهمة:', error);
     alert('حدث خطأ في تحديث المهمة');
   }
 }

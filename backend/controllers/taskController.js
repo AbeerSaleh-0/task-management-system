@@ -1,6 +1,7 @@
 const Task = require('../models/task');
 const Subtask = require('../models/subtask');
 const User = require('../models/user');
+const { sendTaskNotification } = require('../whatsapp_api');
 
 // إنشاء مهمة جديدة
 const createTask = async (req, res, next) => {
@@ -26,6 +27,30 @@ const createTask = async (req, res, next) => {
       due_date || null,
       manager_notes || null
     );
+
+        if (user.phone) {
+      const taskData = {
+        title,
+        description: description || 'لا توجد تفاصيل',
+        due_date: due_date || 'غير محدد',
+        priority: priority || 'متوسطة'
+      };
+
+      // إرسال الإشعار بدون انتظار (async - لا نوقف العملية)
+      sendTaskNotification(user.phone, taskData)
+        .then(result => {
+          if (result.success) {
+            console.log(`✅ تم إرسال إشعار واتساب للمستخدم: ${user.username}`);
+          } else {
+            console.log(`⚠️ فشل إرسال الواتساب: ${result.error}`);
+          }
+        })
+        .catch(err => {
+          console.error('❌ خطأ في إرسال إشعار الواتساب:', err);
+        });
+    } else {
+      console.log(`ℹ️ المستخدم ${user.username} ليس لديه رقم جوال`);
+    }
 
     res.status(201).json({
       success: true,
@@ -159,9 +184,8 @@ const updateTaskStatus = async (req, res, next) => {
 const updateTask = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { title, description, status, priority, due_date } = req.body;
+    const { title, description, status, priority, due_date, user_id, manager_notes } = req.body;
 
-    // التحقق من وجود المهمة
     const task = await Task.findById(id);
     if (!task) {
       return res.status(404).json({
@@ -170,14 +194,15 @@ const updateTask = async (req, res, next) => {
       });
     }
 
-    // تحديث المهمة
     await Task.update(
       id,
       title || task.title,
       description !== undefined ? description : task.description,
       status || task.status,
       priority || task.priority,
-      due_date !== undefined ? due_date : task.due_date
+      due_date !== undefined ? due_date : task.due_date,
+      user_id !== undefined ? user_id : task.user_id,
+      manager_notes !== undefined ? manager_notes : task.manager_notes
     );
 
     res.status(200).json({

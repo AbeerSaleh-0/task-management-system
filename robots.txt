@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /
+
+# Private Internal System
+# Task Management System for Company Use Only
+# Not intended for public indexing

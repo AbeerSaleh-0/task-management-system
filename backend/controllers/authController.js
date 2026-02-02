@@ -14,7 +14,7 @@ const login = async (req, res, next) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid username or password'
+        message: 'اسم المستخدم غير صحيح'
       });
     }
 
@@ -24,7 +24,7 @@ const login = async (req, res, next) => {
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid username or password'
+        message: 'كلمة المرور غير صحيحة'
       });
     }
 
@@ -39,6 +39,7 @@ const login = async (req, res, next) => {
       user: {
         id: user.id,
         username: user.username,
+        name: user.name,
         role: user.role
       }
     });

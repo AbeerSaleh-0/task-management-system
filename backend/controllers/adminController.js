@@ -4,8 +4,7 @@ const User = require('../models/user');
 // إنشاء مستخدم جديد 
 const createUser = async (req, res, next) => {
   try {
-    const { username, name, password, role} = req.body; 
-
+    const { username, password, role, name, phone } = req.body;
     // التحقق من عدم وجود المستخدم
     const existingUser = await User.findByUsername(username);
     if (existingUser) {
@@ -15,11 +14,18 @@ const createUser = async (req, res, next) => {
       });
     }
 
+    if (phone && !/^(05|5)\d{8}$/.test(phone)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'رقم الجوال غير صحيح' 
+      });
+    }
+
     // تشفير كلمة المرور
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // إنشاء المستخدم
-    const result = await User.create(username, hashedPassword, role || 'user', name || null);
+    const result = await User.create(username, hashedPassword, role || 'user', name || null, phone || null );
 
     res.status(201).json({
       success: true,
@@ -229,6 +235,33 @@ const updateUserPassword = async (req, res, next) => {
   }
 };
 
+const updateUserPhone = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { phone } = req.body;
+
+    // التحقق من صحة رقم الجوال (اختياري)
+    if (phone && !/^(05|5)\d{8}$/.test(phone)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'رقم الجوال غير صحيح. يجب أن يبدأ بـ 05 ويتكون من 10 أرقام' 
+      });
+    }
+
+    await User.updatePhone(id, phone);
+    res.json({ 
+      success: true, 
+      message: 'تم تحديث رقم الجوال بنجاح' 
+    });
+  } catch (error) {
+    console.error('خطأ في تحديث رقم الجوال:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: error.message 
+    });
+  }
+};
+
 module.exports = {
   createUser,
   getAllUsers,
@@ -236,5 +269,6 @@ module.exports = {
   updateUserRole,
   updateUserPassword,
   updateUserName,
+  updateUserPhone,
   deleteUser
 };

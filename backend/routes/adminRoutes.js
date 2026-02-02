@@ -7,6 +7,7 @@ const {
   updateUserRole,
   updateUserPassword,
   updateUserName,
+  updateUserPhone,
   deleteUser
 } = require('../controllers/adminController');
 const { authenticateToken } = require('../middleware/auth');
@@ -30,6 +31,10 @@ router.patch('/users/:id/role', updateUserRole);
 
 // PATCH /api/admin/users/:id/password - تحديث كلمة مرور المستخدم
 router.patch('/users/:id/password', updateUserPassword);
+
+router.patch('/users/:id/name', updateUserName);
+
+router.patch('/users/:id/phone', updateUserPhone);
 
 // DELETE /api/admin/users/:id - حذف مستخدم
 router.delete('/users/:id', deleteUser);

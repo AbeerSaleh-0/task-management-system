@@ -1,21 +1,49 @@
 // عنوان الـ API
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://api.taskrsg.cloud/api';
 
 // ======== دوال مساعدة ========
 
 // جلب الـ token من localStorage
 function getToken() {
-  return localStorage.getItem('token');
+  const token = localStorage.getItem('token');
+  const expiry = localStorage.getItem('tokenExpiry');
+  
+  if (!token || !expiry) {
+    return null;
+  }
+  
+  const now = new Date().getTime();
+  
+  // إذا انتهت المدة
+  if (now > parseInt(expiry)) {
+    console.log('❌ Token expired locally');
+    removeToken();
+    removeUser();
+    
+    // توجيه للـ Login
+    if (!window.location.pathname.includes('index.html')) {
+      window.location.href = '/index.html';
+    }
+    
+    return null;
+  }
+  
+  return token;
 }
 
 // حفظ الـ token في localStorage
 function saveToken(token) {
+  const now = new Date().getTime();
+  const expiryTime = now + (12 * 60 * 60 * 1000); // 12 ساعة بالـ milliseconds
+  
   localStorage.setItem('token', token);
+  localStorage.setItem('tokenExpiry', expiryTime);
 }
 
 // حذف الـ token من localStorage
 function removeToken() {
   localStorage.removeItem('token');
+  localStorage.removeItem('tokenExpiry');
 }
 
 // حفظ بيانات المستخدم
@@ -27,6 +55,12 @@ function saveUser(user) {
 function getUser() {
   const user = localStorage.getItem('user');
   return user ? JSON.parse(user) : null;
+}
+
+function getUserName() {
+  const user = getUser();
+  if (!user) return null;
+  return user.name || user.username;
 }
 
 // حذف بيانات المستخدم
@@ -118,15 +152,19 @@ const authAPI = {
   // جلب المستخدم الحالي
   getCurrentUser: () => {
     return getUser();
-  }
+  },
+
+  getUserName: () => {
+  return getUserName();
+}
 };
 
 // ======== Admin APIs ========
 
 const adminAPI = {
   // إنشاء مستخدم جديد
-  createUser: async (username, password, role = 'user') => {
-    return await apiCall('/admin/users', 'POST', { username, password, role });
+  createUser: async (username, password, role = 'user', phone = null) => {
+    return await apiCall('/admin/users', 'POST', { username, password, role, phone });
   },
 
   // جلب جميع المستخدمين
@@ -152,6 +190,10 @@ const adminAPI = {
   // تحديث اسم المستخدم
   updateUserName: async (id, name) => {
     return await apiCall(`/admin/users/${id}/name`, 'PATCH', { name });
+  },
+
+  updateUserPhone: async (id, phone) => {
+    return await apiCall(`/admin/users/${id}/phone`, 'PATCH', { phone });
   },
 
   // حذف مستخدم

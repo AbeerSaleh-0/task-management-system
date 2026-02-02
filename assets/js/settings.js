@@ -32,7 +32,7 @@ async function loadUsers() {
             updateStats();
         }
     } catch (error) {
-        console.error('خطأ في جلب المستخدمين:', error);
+        console.error('خطأ في جلب الموظفين:', error);
         alert('حدث خطأ في تحميل البيانات');
         
         // إذا كان خطأ في التوثيق، إعادة التوجيه لصفحة تسجيل الدخول
@@ -56,12 +56,9 @@ function updateStats() {
 // فلترة المستخدمين
 function filterUsers() {
     const roleFilter = document.getElementById('roleFilter').value;
-    const statusFilter = document.getElementById('statusFilter').value;
-
     filteredUsers = users.filter(user => {
         const matchRole = !roleFilter || user.role === roleFilter;
-        const matchStatus = !statusFilter || user.status === statusFilter;
-        return matchRole && matchStatus;
+        return matchRole;
     });
 
     renderUsers();
@@ -85,8 +82,9 @@ function renderUsers() {
         }) : 'غير محدد';
 
         // الحرف الأول من الاسم أو اسم المستخدم
-        const displayName = user.name || user.username;
+       const displayName = user.name || user.username;
         const avatar = displayName.charAt(0).toUpperCase();
+        const phone = user.phone || 'غير محدد'; 
 
         return `
             <tr>
@@ -98,9 +96,9 @@ function renderUsers() {
                             <p style="font-size: 0.75rem; color: #6b7280;">@${user.username}</p>
                         </div>
                     </div>
-                </td>
+                </td>  
                 <td><span class="role-badge role-${user.role}">${getRoleText(user.role)}</span></td>
-                <td><span class="status-badge status-${user.status || 'active'}">${user.status === 'active' ? 'نشط' : 'غير نشط'}</span></td>
+                <td>${phone}</td>
                 <td>${joinDate}</td>
                 <td>
                     <div class="action-buttons">
@@ -125,14 +123,14 @@ function renderUsers() {
 function getRoleText(role) {
     const roles = {
         'admin': 'مشرف',
-        'user': 'مستخدم',
+        'user': 'موظف',
         'manager': 'مدير'
     };
     return roles[role] || role;
 }
 // فتح نافذة إضافة مستخدم
 function openAddUserModal() {
-    document.getElementById('userModalTitle').textContent = 'إضافة مستخدم جديد';
+    document.getElementById('userModalTitle').textContent = 'إضافة موظف جديد';
     document.getElementById('userForm').reset();
     document.getElementById('userId').value = '';
     
@@ -155,13 +153,13 @@ function editUser(id) {
     const user = users.find(u => u.id === id);
     if (!user) return;
 
-    document.getElementById('userModalTitle').textContent = 'تعديل المستخدم';
+    document.getElementById('userModalTitle').textContent = 'تعديل الموظف';
     document.getElementById('userId').value = user.id;
     document.getElementById('userUsername').value = user.username;
     document.getElementById('userUsername').disabled = true; // تعطيل تعديل اسم المستخدم
     document.getElementById('userName').value = user.name || '';
+    document.getElementById('userPhone').value = user.phone || '';
     document.getElementById('userRole').value = user.role;
-    document.getElementById('userStatus').value = user.status || 'active';
     
     // إخفاء حقول الإضافة وعرض حقول التعديل
     document.getElementById('passwordFields').style.display = 'none';
@@ -179,9 +177,13 @@ async function saveUser() {
     const userId = document.getElementById('userId').value;
     const username = document.getElementById('userUsername').value.trim();
     const name = document.getElementById('userName').value.trim();
+    const phone = document.getElementById('userPhone').value.trim();
     const role = document.getElementById('userRole').value;
-    const status = document.getElementById('userStatus').value;
 
+    if (phone && !/^(05|5)\d{8}$/.test(phone)) {
+        alert('رقم الجوال غير صحيح. يجب أن يبدأ بـ 05 ويتكون من 10 أرقام');
+        return;
+    }
     if (!username || !role) {
         alert('يرجى ملء الحقول المطلوبة (اسم المستخدم والصلاحية)');
         return;
@@ -209,7 +211,7 @@ async function saveUser() {
                 return;
             }
 
-            const response = await adminAPI.createUser(username, password, role);
+            const response = await adminAPI.createUser(username, password, role, phone);
 
             if (response.success) {
                 // تحديث الاسم الكامل إذا تم إدخاله
@@ -217,7 +219,7 @@ async function saveUser() {
                     await adminAPI.updateUserName(response.userId, name);
                 }
                 
-                alert('تم إضافة المستخدم بنجاح!');
+                alert('تم إضافة الموظف بنجاح!');
                 await loadUsers();
                 closeUserModal();
             }
@@ -230,7 +232,11 @@ async function saveUser() {
                 const nameResponse = await adminAPI.updateUserName(userId, name);
                 if (!nameResponse.success) updateSuccess = false;
             }
-            
+            // ✅ تحديث رقم الجوال
+            if (phone !== '') {
+                const phoneResponse = await adminAPI.updateUserPhone(userId, phone);
+                if (!phoneResponse.success) updateSuccess = false;
+            }
             // تحديث الدور
             const roleResponse = await adminAPI.updateUserRole(userId, role);
             if (!roleResponse.success) updateSuccess = false;
@@ -262,13 +268,13 @@ async function saveUser() {
             }
 
             if (updateSuccess) {
-                alert('تم تحديث المستخدم بنجاح!' + (newPassword ? ' (تم تغيير كلمة المرور)' : ''));
+                alert('تم تحديث الموظف بنجاح!' + (newPassword ? ' (تم تغيير كلمة المرور)' : ''));
                 await loadUsers();
                 closeUserModal();
             }
         }
     } catch (error) {
-        console.error('خطأ في حفظ المستخدم:', error);
+        console.error('خطأ في حفظ الموظف:', error);
         alert(error.message || 'حدث خطأ في حفظ البيانات');
     }
 }
@@ -282,7 +288,7 @@ async function deleteUser(id) {
         return;
     }
 
-    if (!confirm('هل أنت متأكد من حذف هذا المستخدم؟ سيتم حذف جميع مهامه أيضاً.')) {
+    if (!confirm('هل أنت متأكد من حذف هذا الموظف سيتم حذف جميع مهامه أيضاً.')) {
         return;
     }
 
@@ -290,12 +296,12 @@ async function deleteUser(id) {
         const response = await adminAPI.deleteUser(id);
 
         if (response.success) {
-            alert('تم حذف المستخدم بنجاح!');
+            alert('تم حذف الموظف بنجاح!');
             await loadUsers();
         }
     } catch (error) {
-        console.error('خطأ في حذف المستخدم:', error);
-        alert(error.message || 'حدث خطأ في حذف المستخدم');
+        console.error('خطأ في حذف الموظف:', error);
+        alert(error.message || 'حدث خطأ في حذف الموظف');
     }
 }
 
