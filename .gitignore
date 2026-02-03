@@ -73,7 +73,7 @@ coverage/
 temp/
 tmp/
 
-# Package manager locks (اختياري - أنا أفضل نحفظها)
+# Package manager locks 
 # package-lock.json
 # yarn.lock
 # pnpm-lock.yaml
@@ -124,3 +124,6 @@ $RECYCLE.BIN/
 .directory
 .Trash-*
 .nfs*
+
+# Seeds
+backend/seedUsers.js
