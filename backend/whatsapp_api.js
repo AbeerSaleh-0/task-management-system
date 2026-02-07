@@ -3,15 +3,19 @@ const PHONE_NUMBER_ID = process.env.PHONE_ID;
 const ACCESS_TOKEN = process.env.WA_APP;
 
 function formatPhoneNumber(phoneNumber) {
-  let formattedPhone = phoneNumber;
-
   if (phoneNumber.startsWith('0')) {
-    formattedPhone = '966' + phoneNumber.slice(1);
-  } else if (!phoneNumber.startsWith('966')) {
-    formattedPhone = '966' + phoneNumber;
+    return '966' + phoneNumber.slice(1);
   }
 
-  return formattedPhone;
+  if (
+    phoneNumber.startsWith('966') ||
+    phoneNumber.startsWith('20') ||
+    phoneNumber.startsWith('970')
+  ) {
+    return phoneNumber;
+  }
+
+  return '966' + phoneNumber;
 }
 
 async function sendTaskNotification(phoneNumber, taskData) {
@@ -39,12 +43,12 @@ async function sendTaskNotification(phoneNumber, taskData) {
               },
               {
                 type: 'text',
-                parameter_name: 'task_description',
+                parameter_name: 'task_details',
                 text: taskData.description || 'لا توجد تفاصيل'
               },
               {
                 type: 'text',
-                parameter_name: 'task_date',
+                parameter_name: 'task_duedate',
                 text: taskData.due_date
               }
             ]
