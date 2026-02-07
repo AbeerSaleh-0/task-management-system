@@ -180,10 +180,15 @@ async function saveUser() {
     const phone = document.getElementById('userPhone').value.trim();
     const role = document.getElementById('userRole').value;
 
-    if (phone && !/^(05|5)\d{8}$/.test(phone)) {
+   /* if (phone && !/^(05|5)\d{8}$/.test(phone)) {
         alert('رقم الجوال غير صحيح. يجب أن يبدأ بـ 05 ويتكون من 10 أرقام');
         return;
+    }*/
+   if (phone && !/^(966\d{9}|20\d{10}|970\d{9})$/.test(phone)) {
+    alert('رقم الجوال غير صحيح. يجب أن يبدأ بـ 966 أو 20 أو 970');
+    return;
     }
+
     if (!username || !role) {
         alert('يرجى ملء الحقول المطلوبة (اسم المستخدم والصلاحية)');
         return;
